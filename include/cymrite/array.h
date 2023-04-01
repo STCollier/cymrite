@@ -1,4 +1,4 @@
-#ifndef ARRAY_H
-#define ARRAY_H
+#ifndef CYMRITE_ARRAY_H
+#	define CYMRITE_ARRAY_H
 
 #endif
