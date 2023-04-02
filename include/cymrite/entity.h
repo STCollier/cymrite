@@ -1,7 +1,7 @@
 #ifndef CYMRITE_ENTITY_H
 #	define CYMRITE_ENTITY_H
 
-#include <cymrite/types.h>
+#	include <cymrite/types.h>
 
 struct Entity {
 	unsigned int ID;

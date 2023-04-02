@@ -1,8 +1,8 @@
 #ifndef CYMRITE_GEOMETRY_H
 #	define CYMRITE_GEOMETRY_H
 
-#include <cymrite/types.h>
-#include <stdbool.h>
+#	include <cymrite/types.h>
+#	include <stdbool.h>
 
 struct Rectangle {
 	struct Vector2 pos;

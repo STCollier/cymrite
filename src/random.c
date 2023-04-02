@@ -1,9 +1,8 @@
 #include <cymrite/random.h>
 #include <stdlib.h>
 
-int seedRandom(const int seed) {
+void seedRandom(const int seed) {
 	srand(seed);
-	return 0;
 }
 
 int getRandom(const int min, const int max) {
