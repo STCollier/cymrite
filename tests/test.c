@@ -1,12 +1,10 @@
-#include <stdio.h>
 #include <cymrite/array.h>
+#include <stdio.h>
 
 int main(void) {
-    struct Array myArray = createArray();
+	struct Array array = createArray();
 
-    myArray = arrayAppend(myArray, (void*)'e');
+	array = arrayAppend(array, (void*)'e');
 
-    printf("%s", (char*)myArray.data);
-
-    return 0;
+	printf("%s\n", (char*)array.data);
 }
