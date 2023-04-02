@@ -4,7 +4,7 @@
 
 struct Array createArray() {
 	struct Array array;
-	array.data = malloc(array.data, 0);
+	array.data = malloc(array.data);
 	array.size = 0;
 	return array;
 }
@@ -30,6 +30,7 @@ struct Array arrayRemove(struct Array array, const size_t index) {
 		array.data = realloc(array.data, --array.size);
 	}
 	return array;
+}
 
 struct Array arrayAppend(struct Array array, const void* value) {
 	return arrayInsert(array, array.size - 1, value);
