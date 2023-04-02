@@ -12,7 +12,7 @@ struct Array createArray();
 
 void deleteArray(struct Array array);
 
-struct Array arrayInsert(struct Array array, const size_t index, const void* value);
+struct Array arrayInsert(struct Array array, size_t index, const void* value);
 
 struct Array arrayRemove(struct Array array, size_t index);
 
