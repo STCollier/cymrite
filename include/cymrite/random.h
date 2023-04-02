@@ -1,7 +1,7 @@
 #ifndef CYMRITE_RANDOM_H
 #	define CYMRITE_RANDOM_H
 
-int seedRandom(unsigned int seed);
+int seedRandom(int seed);
 
 int getRandom(int min, int max);
 

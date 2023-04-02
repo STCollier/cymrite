@@ -1,7 +1,7 @@
 #include <cymrite/random.h>
 #include <stdlib.h>
 
-int seedRandom(const unsigned int seed) {
+int seedRandom(const int seed) {
 	srand(seed);
 	return 0;
 }
