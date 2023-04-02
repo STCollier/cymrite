@@ -1,24 +1,14 @@
-#include "entity.h"
-#include "types.h"
+#include <cymrite/entity.h>
+#include <cymrite/types.h>
 
-struct Entity init(double x, double y) {
-    struct Entity self;
+struct Entity createEntity(const double x, const double y) {
+	static unsigned int nextID = 0;
 
-    self.ID = &self.ID;
-    self.pos.x = x;
-    self.pos.y = y;
+	struct Entity self;
 
-    return self;
-}
+	self.ID = nextID++;
+	self.pos.x = x;
+	self.pos.y = y;
 
-double entityGetX(struct Entity self) {
-    return self.pos.x;
-}
-
-double entityGetY(struct Entity self) {
-    return self.pos.y;
-}
-
-cym_vec2 entityGetPos(struct Entity self) {
-    return self.pos;
+	return self;
 }
