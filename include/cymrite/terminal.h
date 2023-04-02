@@ -4,7 +4,7 @@
 #	include <cymrite/color.h>
 #	include <stdbool.h>
 
-void enableRawMode(bool echo = true);
+void enableRawMode(bool echo);
 
 void disableRawMode();
 

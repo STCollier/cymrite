@@ -3,8 +3,6 @@
 
 void seedRandom(int seed);
 
-int getRandom(int min, int max);
-
 double getRandom(double min, double max);
 
 #endif

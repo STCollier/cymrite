@@ -1,20 +1,18 @@
-#include <cymrite/gometry.h>
+#include <cymrite/geometry.h>
 #include <cymrite/types.h>
 #include <stdbool.h>
 
 struct Rectangle createRectangle(const struct Vector2 pos, const double width, const double height) {
-	struct Rectangle self;
-
-	self.pos = pos;
-	self.width = width;
-	self.height = height;
-
-	return self;
+	struct Rectangle rectangle;
+	rectangle.pos = pos;
+	rectangle.width = width;
+	rectangle.height = height;
+	return rectangle;
 }
 
-bool rectangleRectangleCollision(const struct Rectangle rect1, const struct Rectangle rect2) {
-	return ((rect1.pos.x + rect1.width) >= rect2.pos.x)
-		&& (rect1.pos.x <= (rect2.pos.x + rect2.width))
-		&& ((rect1.pos.y + rect1.height) >= rect2.pos.y)
-		&& (rect1.pos.y <= (rect2.pos.y + rect2.height));
+bool rectangleRectangleCollision(const struct Rectangle rectangle1, const struct Rectangle rectangle2) {
+	return ((rectangle1.pos.x + rectangle1.width) >= rectangle2.pos.x)
+		&& (rectangle1.pos.x <= (rectangle2.pos.x + rectangle2.width))
+		&& ((rectangle1.pos.y + rectangle1.height) >= rectangle2.pos.y)
+		&& (rectangle1.pos.y <= (rectangle2.pos.y + rectangle2.height));
 }

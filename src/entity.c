@@ -4,11 +4,9 @@
 struct Entity createEntity(const double x, const double y) {
 	static unsigned int nextID = 0;
 
-	struct Entity self;
-
-	self.ID = nextID++;
-	self.pos.x = x;
-	self.pos.y = y;
-
-	return self;
+	struct Entity entity;
+	entity.ID = nextID++;
+	entity.pos.x = x;
+	entity.pos.y = y;
+	return entity;
 }

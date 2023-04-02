@@ -8,12 +8,11 @@ struct Color {
 	uint8_t red;
 	uint8_t green;
 	uint8_t blue;
-	uint8_t alpha;
 };
 
-struct Color createColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255);
+struct Color createColor(uint8_t red, uint8_t green, uint8_t blue);
 
-struct Color createColor(uint32_t value);
+struct Color colorFromValue(uint32_t value);
 
 uint32_t getColorValue(struct Color color);
 
