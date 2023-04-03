@@ -13,7 +13,7 @@ void deleteArray(struct Array array) {
 	free(array.data);
 }
 
-struct Array arrayInsert(struct Array array, const size_t index, void* value) {
+struct Array arrayInsert(struct Array array, const size_t index, const size_t value) {
 	if (index <= array.size) {
 		array.data = realloc(array.data, ++array.size);
 		for (size_t i = array.size; i > index; --i)
@@ -32,7 +32,7 @@ struct Array arrayRemove(struct Array array, const size_t index) {
 	return array;
 }
 
-struct Array arrayAppend(struct Array array, void* value) {
+struct Array arrayAppend(struct Array array, const size_t value) {
 	return arrayInsert(array, array.size, value);
 }
 
