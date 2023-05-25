@@ -5,7 +5,7 @@
 #include <string.h>
 
 size_t cymrite_countTokens(const char* string) {
-	char* copy;
+	char* copy = malloc(strlen(string));
 	strcpy(copy, string);
 
 	size_t count = 0;
@@ -43,8 +43,6 @@ void cymrite_lowercase(const char* string, char* result) {
 	for (size_t i = strlen(result); i--;) {
 		result[i] = tolower(result[i]);
 	}
-
-	return result;
 }
 
 void cymrite_repeatString(const char* string, char* result, size_t count) {

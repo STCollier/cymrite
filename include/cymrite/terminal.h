@@ -20,7 +20,7 @@ typedef struct {
 
 cymrite_TerminalMode cymrite_TerminalMode_create();
 
-void cymrite_TerminalMode_delete(cymrite_TerminalMode terminalMode);
+void cymrite_TerminalMode_delete(cymrite_TerminalMode* terminalMode);
 
 void cymrite_TerminalMode_setBlocking(cymrite_TerminalMode* terminalMode, bool value);
 

@@ -6,5 +6,5 @@ void cymrite_seedRandom(const int seed) {
 }
 
 double cymrite_getRandom(const double minimum, const double maximum) {
-	return (double)rand() / RAND_MAX * (max - min + 1) + min;
+	return (double)rand() / RAND_MAX * (maximum - minimum + 1) + minimum;
 }

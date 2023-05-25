@@ -9,36 +9,34 @@ cymrite_Array cymrite_Array_create(const size_t size) {
 	return array;
 }
 
-void cymrite_Array_delete(cymrite_Array array) {
-	free(array.data);
+void cymrite_Array_delete(cymrite_Array* array) {
+	free(array->data);
+	array->size = 0;
 }
 
-cymrite_Array cymrite_Array_insert(cymrite_Array array, const size_t index, const size_t value) {
-	if (index <= array.size) {
-		array.data = realloc(array.data, sizeof(size_t) * ++array.size);
-		for (size_t i = array.size; i > index; --i) {
-			array.data[i] = array.data[i - 1];
+void cymrite_Array_insert(cymrite_Array* array, const size_t index, const size_t value) {
+	if (index <= array->size) {
+		array->data = realloc(array->data, sizeof(size_t) * ++array->size);
+		for (size_t i = array->size; i > index; --i) {
+			array->data[i] = array->data[i - 1];
 		}
-		array.data[index] = value;
+		array->data[index] = value;
 	}
-	return array;
 }
 
-cymrite_Array cymrite_Array_erase(cymrite_Array array, const size_t index) {
-	if (array.size && (index < array.size)) {
-		for (size_t i = index; i < (array.size - 1); ++i) {
-			array.data[i] = array.data[i + 1];
+void cymrite_Array_erase(cymrite_Array* array, const size_t index) {
+	if (array->size && (index < array->size)) {
+		for (size_t i = index; i < (array->size - 1); ++i) {
+			array->data[i] = array->data[i + 1];
 		}
-		array.data = realloc(array.data, sizeof(size_t) * --array.size);
+		array->data = realloc(array->data, sizeof(size_t) * --array->size);
 	}
-	return array;
 }
 
-cymrite_Array cymrite_Array_push(cymrite_Array array, const size_t value) {
-	return arrayInsert(array, array.size, value);
+void cymrite_Array_push(cymrite_Array* array, const size_t value) {
+	return cymrite_Array_insert(array, array->size, value);
 }
 
-cymrite_Array cymrite_Array_pop(cymrite_Array array) {
-	return arrayRemove(array, array.size - 1);
+void cymrite_Array_pop(cymrite_Array* array) {
+	return cymrite_Array_erase(array, array->size - 1);
 }
-

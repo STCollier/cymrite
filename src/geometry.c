@@ -10,5 +10,5 @@ cymrite_Rectangle cymrite_Rectangle_create(const cymrite_Vector2 position, const
 }
 
 bool cymrite_Rectangle_hasCollision(const cymrite_Rectangle rectangle1, const cymrite_Rectangle rectangle2) {
-	return ((rectangle1.position.x >= rectangle2.position.x) && (rectangle1.position.x <= (rectangle2.position.x + rectangle2.size.x)) || (rectangle2.position.x >= rectangle1.position.x) && (rectangle2.position.x <= (rectangle1.position.x + rectangle1.size.x))) && ((rectangle1.position.y >= rectangle2.position.y) && (rectangle1.position.y <= (rectangle2.position.y + rectangle2.size.y)) || (rectangle2.position.y >= rectangle1.position.y) && (rectangle2.position.y <= (rectangle1.position.y + rectangle1.size.y)));
+	return (((rectangle1.position.x >= rectangle2.position.x) && (rectangle1.position.x <= (rectangle2.position.x + rectangle2.size.x))) || ((rectangle2.position.x >= rectangle1.position.x) && (rectangle2.position.x <= (rectangle1.position.x + rectangle1.size.x)))) && (((rectangle1.position.y >= rectangle2.position.y) && (rectangle1.position.y <= (rectangle2.position.y + rectangle2.size.y))) || ((rectangle2.position.y >= rectangle1.position.y) && (rectangle2.position.y <= (rectangle1.position.y + rectangle1.size.y))));
 }
