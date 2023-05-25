@@ -1,10 +1,10 @@
 #include <cymrite/random.h>
 #include <stdlib.h>
 
-void seedRandom(const int seed) {
+void cymrite_seedRandom(const int seed) {
 	srand(seed);
 }
 
-double getRandom(const double min, const double max) {
+double cymrite_getRandom(const double minimum, const double maximum) {
 	return (double)rand() / RAND_MAX * (max - min + 1) + min;
 }

@@ -1,12 +1,12 @@
 #include <cymrite/entity.h>
-#include <cymrite/types.h>
+#include <stddef.h>
 
-struct Entity createEntity(const double x, const double y) {
-	static unsigned int nextID = 0;
+cymrite_Entity cymrite_Entity_create(const double x, const double y) {
+	static size_t nextID = 0;
 
-	struct Entity entity;
+	cymrite_Entity entity;
 	entity.ID = nextID++;
-	entity.pos.x = x;
-	entity.pos.y = y;
+	entity.position.x = x;
+	entity.position.y = y;
 	return entity;
 }

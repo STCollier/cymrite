@@ -1,108 +1,97 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
+#include <cymrite/string.h>
+#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include <cymrite/string.h>
+size_t cymrite_countTokens(const char* string) {
+	char* copy;
+	strcpy(copy, string);
 
+	size_t count = 0;
+	char* token = strtok(copy, cymrite_whitespace);
 
-int numWords(char string[]) {
-	char unmodified[strlen(string) + 1];
-    strcpy(unmodified, string);
-
-	int words = 0;
-	char* token = strtok(string, " ");
-
-	while(token != NULL) {
-		words++;
-
-		token = strtok(NULL, " ");
+	while (token != NULL) {
+		++count;
+		token = strtok(NULL, cymrite_whitespace);
 	}
 
-	strcpy(string, unmodified);
-	return words;
+	return count;
 }
 
-int getNumChars(char string[], char c) {
-	int chars = 0;
+size_t cymrite_countCharacter(const char* string, const char character) {
+	size_t count = 0;
 
-	for (size_t i = 0; i < strlen(string); i++) {
-		if (string[i] == c) chars++;
+	for (size_t i = strlen(string); i--;) {
+		count += (string[i] == character);
 	}
 
-	return chars;
+	return count;
 }
 
-char* uppercase(char string[]) {
-	char* upper = malloc(strlen(string) + 1);
-    strcpy(upper, string);
+void cymrite_uppercase(const char* string, char* result) {
+	strcpy(result, string);
 
-	for (size_t i = 0; i < strlen(upper); i++) {
-		upper[i] = toupper(upper[i]);
+	for (size_t i = strlen(result); i--;) {
+		result[i] = toupper(result[i]);
 	}
-
-	return upper;
 }
 
-char* lowercase(char string[]) {
-	char* lower = malloc(strlen(string) + 1);
-    strcpy(lower, string);
+void cymrite_lowercase(const char* string, char* result) {
+	strcpy(result, string);
 
-	for (size_t i = 0; i < strlen(lower); i++) {
-		lower[i] = tolower(lower[i]);
+	for (size_t i = strlen(result); i--;) {
+		result[i] = tolower(result[i]);
 	}
 
-	return lower;
+	return result;
 }
 
-char* repeatStr(char string[], int iterations) {
-	char* str = malloc((strlen(string) * iterations) + 1);
-
-	for (int i = 0; i < iterations; i++) {
-		strcat(str, string);
+void cymrite_repeatString(const char* string, char* result, size_t count) {
+	while (count--) {
+		strcat(result, string);
 	}
-
-	//Trim trailing whitespace
-	if (str[strlen(str)-1] == ' ') {
-		str[strlen(str)-1] = '\0';
-	}
-
-	return str;
 }
 
-char* trimForwards(char string[], int num) {
-	char* str = malloc(num + 1);
+void cymrite_trimStringFront(const char* string, char* result, const char* characters) {
+	const size_t stringSize = strlen(string);
+	size_t index = 0;
 
-	if ((size_t) num <= strlen(string) && num > 0) {
-		strncpy(str, string, num);
-
-		return str;
+	while ((index < stringSize) && (strchr(characters, string[index]) != NULL)) {
+		++index;
 	}
 
-	return NULL;
+	strcpy(result, string + index);
 }
 
-char* trimBackwards(char string[], int num) {
-	char* str = malloc(num + 1);
+void cymrite_trimStringBack(const char* string, char* result, const char* characters) {
+	strcpy(result, string);
+	size_t index = strlen(string);
 
-	if ((size_t) num <= strlen(string) && num > 0) {
-		strncpy(str, string + strlen(string) - num, num);
-
-		return str;
+	while (index && (strchr(characters, string[index]) != NULL)) {
+		--index;
 	}
 
-	return NULL;
+	result[index + 1] = 0;
 }
 
-char* truncateStr(char string[], int length, char* suffix) {
-	char* str = malloc(length + 1);
+void cymrite_trimString(const char* string, char* result, const char* characters) {
+	cymrite_trimStringFront(string, result, characters);
+	cymrite_trimStringBack(string, result, characters);
+}
 
-	if (length > 0) {
-		strncpy(str, string, length - strlen(suffix));
-		strcat(str, suffix);
+void cymrite_truncateString(const char* string, char* result, const size_t length, const char* suffix) {
+	const size_t stringSize = strlen(string);
+	const size_t suffixSize = strlen(suffix);
 
-		return str;
+	if (stringSize > length) {
+		if (suffixSize > length) {
+			strcpy(result, suffix);
+			result[length + 1] = 0;
+		} else {
+			strcpy(result, string);
+			result[length - suffixSize + 1] = 0;
+			strcat(result, suffix);
+		}
 	}
-
-	return NULL;
 }

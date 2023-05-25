@@ -1,17 +1,16 @@
-#ifndef CYMRITE_GEOMETRY_H
-#	define CYMRITE_GEOMETRY_H
+#ifndef CYMRITE_HEADER_GEOMETRY
+#define CYMRITE_HEADER_GEOMETRY
 
-#	include <cymrite/types.h>
-#	include <stdbool.h>
+#include <cymrite/types.h>
+#include <stdbool.h>
 
-struct Rectangle {
-	struct Vector2 pos;
-	double width;
-	double height;
-};
+typedef struct {
+	cymrite_Vector2 position;
+	cymrite_Vector2 size;
+} cymrite_Rectangle;
 
-struct Rectangle createRectangle(struct Vector2 pos, double width, double height);
+cymrite_Rectangle cymrite_Rectangle_create(cymrite_Vector2 position, cymrite_Vector2 size);
 
-bool rectangleRectangleCollision(struct Rectangle rect1, struct Rectangle rect2);
+bool cymrite_Rectangle_hasCollision(cymrite_Rectangle rectangle1, cymrite_Rectangle rectangle2);
 
-#endif
+#endif // CYMRITE_HEADER_GEOMETRY

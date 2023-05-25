@@ -1,21 +1,21 @@
-#ifndef CYMRITE_COLOR_H
-#	define CYMRITE_COLOR_H
+#ifndef CYMRITE_HEADER_COLOR
+#define CYMRITE_HEADER_COLOR
 
-#	include <stdbool.h>
-#	include <stdint.h>
+#include <stdbool.h>
+#include <stdint.h>
 
-struct Color {
+typedef struct {
 	uint8_t red;
 	uint8_t green;
 	uint8_t blue;
-};
+} cymrite_Color;
 
-struct Color createColor(uint8_t red, uint8_t green, uint8_t blue);
+cymrite_Color cymrite_Color_create(uint8_t red, uint8_t green, uint8_t blue);
 
-struct Color colorFromValue(uint32_t value);
+cymrite_Color cymrite_Color_fromValue(uint32_t value);
 
-uint32_t getColorValue(struct Color color);
+uint32_t cymrite_Color_getValue(cymrite_Color color);
 
-bool compareColors(struct Color color1, struct Color color2);
+bool cymrite_Color_compare(cymrite_Color color1, cymrite_Color color2);
 
-#endif
+#endif // CYMRITE_HEADER_COLOR

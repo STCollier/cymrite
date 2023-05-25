@@ -1,15 +1,15 @@
-#ifndef CYMRITE_TYPES_H
-#	define CYMRITE_TYPES_H
+#ifndef CYMRITE_HEADER_TYPES
+#define CYMRITE_HEADER_TYPES
 
-struct Vector2 {
+typedef struct {
 	double x;
 	double y;
-};
+} cymrite_Vector2;
 
-struct Vector3 {
+typedef struct {
 	double x;
 	double y;
 	double z;
-};
+} cymrite_Vector3;
 
-#endif
+#endif // CYMRITE_HEADER_TYPES

@@ -1,23 +1,23 @@
-#ifndef CYMRITE_ARRAY_H
-#	define CYMRITE_ARRAY_H
+#ifndef CYMRITE_HEADER_ARRAY
+#define CYMRITE_HEADER_ARRAY
 
-#	include <stddef.h>
+#include <stddef.h>
 
-struct Array {
+typedef struct {
 	size_t* data;
 	size_t size;
-};
+} cymrite_Array;
 
-struct Array createArray();
+cymrite_Array cymrite_Array_create(size_t size);
 
-void deleteArray(struct Array array);
+void cymrite_Array_delete(cymrite_Array array);
 
-struct Array arrayInsert(struct Array array, size_t index, size_t value);
+cymrite_Array cymrite_Array_insert(cymrite_Array array, size_t index, size_t value);
 
-struct Array arrayRemove(struct Array array, size_t index);
+cymrite_Array cymrite_Array_erase(cymrite_Array array, size_t index);
 
-struct Array arrayAppend(struct Array array, size_t value);
+cymrite_Array cymrite_Array_push(cymrite_Array array, size_t value);
 
-struct Array arrayPop(struct Array array);
+cymrite_Array cymrite_Array_pop(cymrite_Array array);
 
-#endif
+#endif // CYMRITE_HEADER_ARRAY

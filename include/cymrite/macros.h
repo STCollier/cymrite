@@ -1,0 +1,12 @@
+#ifndef CYMRITE_HEADER_MACROS
+#define CYMRITE_HEADER_MACROS
+
+#define CYMRITE_CAT(a, b) CYMRITE_CAT_PRIM(a, b)
+
+#define CYMRITE_CAT_PRIM(a, b) a ## b
+
+#define CYMRITE_QUOTE(x) CYMRITE_QUOTE_PRIM(x)
+
+#define CYMRITE_QUOTE_PRIM(x) #x
+
+#endif // CYMRITE_HEADER_MACROS

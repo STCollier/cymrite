@@ -1,77 +1,75 @@
-#ifndef CYMRITE_TERMINAL_H
-#	define CYMRITE_TERMINAL_H
+#ifndef CYMRITE_HEADER_TERMINAL
+#define CYMRITE_HEADER_TERMINAL
 
-#	include <cymrite/color.h>
-#	include <stdbool.h>
+#include <cymrite/color.h>
+#include <stdbool.h>
+#include <termios.h>
 
-void enableRawMode(bool echo);
+typedef struct {
+	struct termios cookedMode;
+	int blockingMode;
 
-void disableRawMode();
+	bool blocking;
+	bool echo;
+	bool canonical;
+	bool signals;
+	bool processing;
 
-void disableBlockingMode();
+	bool locked;
+} cymrite_TerminalMode;
 
-void enableBlockingMode();
+cymrite_TerminalMode cymrite_TerminalMode_create();
 
-void enableBold();
+void cymrite_TerminalMode_delete(cymrite_TerminalMode terminalMode);
 
-void disableBold();
+void cymrite_TerminalMode_setBlocking(cymrite_TerminalMode* terminalMode, bool value);
 
-void enableDim();
+void cymrite_TerminalMode_setEcho(cymrite_TerminalMode* terminalMode, bool value);
 
-void disableDim();
+void cymrite_TerminalMode_setCanonical(cymrite_TerminalMode* terminalMode, bool value);
 
-void enableItalic();
+void cymrite_TerminalMode_setSignals(cymrite_TerminalMode* terminalMode, bool value);
 
-void disableItalic();
+void cymrite_TerminalMode_setProcessing(cymrite_TerminalMode* terminalMode, bool value);
 
-void enableUnderline();
+void cymrite_TerminalMode_lock(cymrite_TerminalMode* terminalMode);
 
-void disableUnderline();
+void cymrite_TerminalMode_unlock(cymrite_TerminalMode* terminalMode);
 
-void enableBlink();
+void cymrite_setBoldText(bool value);
 
-void disableBlink();
+void cymrite_setDimText(bool value);
 
-void enableInverse();
+void cymrite_setItalicText(bool value);
 
-void disableInverse();
+void cymrite_setUnderlineText(bool value);
 
-void enableInvisible();
+void cymrite_setBlinkText(bool value);
 
-void disableInvisible();
+void cymrite_setInverseText(bool value);
 
-void enableStrikethrough();
+void cymrite_setInvisibleText(bool value);
 
-void disableStrikethrough();
+void cymrite_setStrikethroughText(bool value);
 
-void colorForeground(struct Color color);
+void cymrite_setForegroundColor(cymrite_Color color);
 
-void resetForeground();
+void cymrite_resetForegroundColor();
 
-void colorBackground(struct Color color);
+void cymrite_setBackgroundColor(cymrite_Color color);
 
-void resetBackground();
+void cymrite_resetBackgroundColor();
 
-void resetStyles();
+void cymrite_resetStyle();
 
-void clearScreen();
+void cymrite_clearScreen();
 
-void clearLine();
+void cymrite_clearLine();
 
-void hideCursor();
+void cymrite_setInvisibleCursor(bool value);
 
-void showCursor();
+void cymrite_setAlternativeCursor(bool value);
 
-void saveCursor();
+void cymrite_setAlternativeScreen(bool value);
 
-void restoreCursor();
-
-void saveScreen();
-
-void restoreScreen();
-
-void enableAlternative();
-
-void disableAlternative();
-
-#endif
+#endif // CYMRITE_HEADER_TERMINAL

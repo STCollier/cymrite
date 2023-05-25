@@ -2,17 +2,13 @@
 #include <cymrite/types.h>
 #include <stdbool.h>
 
-struct Rectangle createRectangle(const struct Vector2 pos, const double width, const double height) {
-	struct Rectangle rectangle;
-	rectangle.pos = pos;
-	rectangle.width = width;
-	rectangle.height = height;
+cymrite_Rectangle cymrite_Rectangle_create(const cymrite_Vector2 position, const cymrite_Vector2 size) {
+	cymrite_Rectangle rectangle;
+	rectangle.position = position;
+	rectangle.size = size;
 	return rectangle;
 }
 
-bool rectangleRectangleCollision(const struct Rectangle rectangle1, const struct Rectangle rectangle2) {
-	return ((rectangle1.pos.x + rectangle1.width) >= rectangle2.pos.x)
-		&& (rectangle1.pos.x <= (rectangle2.pos.x + rectangle2.width))
-		&& ((rectangle1.pos.y + rectangle1.height) >= rectangle2.pos.y)
-		&& (rectangle1.pos.y <= (rectangle2.pos.y + rectangle2.height));
+bool cymrite_Rectangle_hasCollision(const cymrite_Rectangle rectangle1, const cymrite_Rectangle rectangle2) {
+	return ((rectangle1.position.x >= rectangle2.position.x) && (rectangle1.position.x <= (rectangle2.position.x + rectangle2.size.x)) || (rectangle2.position.x >= rectangle1.position.x) && (rectangle2.position.x <= (rectangle1.position.x + rectangle1.size.x))) && ((rectangle1.position.y >= rectangle2.position.y) && (rectangle1.position.y <= (rectangle2.position.y + rectangle2.size.y)) || (rectangle2.position.y >= rectangle1.position.y) && (rectangle2.position.y <= (rectangle1.position.y + rectangle1.size.y)));
 }

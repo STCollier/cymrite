@@ -1,13 +1,14 @@
-#ifndef CYMRITE_ENTITY_H
-#	define CYMRITE_ENTITY_H
+#ifndef CYMRITE_HEADER_ENTITY
+#define CYMRITE_HEADER_ENTITY
 
-#	include <cymrite/types.h>
+#include <cymrite/types.h>
+#include <stddef.h>
 
-struct Entity {
-	unsigned int ID;
-	struct Vector2 pos;
-};
+typedef struct {
+	size_t id;
+	cymrite_Vector2 position;
+} cymrite_Entity;
 
-struct Entity createEntity(double x, double y);
+cymrite_Entity cymrite_Entity_create(double x, double y);
 
-#endif
+#endif // CYMRITE_HEADER_ENTITY

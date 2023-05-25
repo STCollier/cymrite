@@ -1,8 +1,8 @@
-#ifndef CYMRITE_RANDOM_H
-#	define CYMRITE_RANDOM_H
+#ifndef CYMRITE_HEADER_RANDOM
+#define CYMRITE_HEADER_RANDOM
 
-void seedRandom(int seed);
+void cymrite_seedRandom(int seed);
 
-double getRandom(double min, double max);
+double cymrite_getRandom(double minimum, double maximum);
 
-#endif
+#endif // CYMRITE_HEADER_RANDOM
