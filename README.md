@@ -3,4 +3,4 @@
 </p>
 
 
-<h3 align="center">C Utility Library</h3>
+<h1 align="center">C Utility Library</h1>
