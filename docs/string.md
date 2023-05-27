@@ -2,15 +2,16 @@
 
 Defined in header [<cymrite/string.h>](../include/cymrite/string.h)
 
+
 ## `int cymrite_countTokens(const char* string)`
 
-**Description:**
+#### Description:
 - Returns the number of words from a given string.
 
-**Parameters:**
+#### Parameters:
 - `string`: a char array, `const char* string`, the value to get the number of words from
 
-**Returns:**
+#### Returns:
 - An integer
 
 ### Example
@@ -24,17 +25,20 @@ Output:
 6
 ```
 
+<br/>
+
 ## `int cymrite_countChar(const char* string, const char character)`
 
-**Description:**
+#### Description:
 - Returns the number of a given character from a given string, case sensitive.
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to get the number of chars from
 - `character`: a single char, `const char character`, the selected character value to use
 
-**Returns:**
+#### Returns:
 - An integer
+
 
 ### Example
 ```c
@@ -47,16 +51,19 @@ Output:
 3
 ```
 
+<br/>
+
+
 ## `void cymrite_upper(const char* string, char* result)`
 
-**Description:**
+#### Description:
 - Converts all the letters of a string to uppercase
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to convert to uppercase
 - `result`: a char pointer, `char* result`, which stores the new capitilized value of the string
 
-**Returns:**
+#### Returns:
 - Void
 
 ### Example
@@ -75,16 +82,19 @@ Output:
 HELLO WORLD!
 ```
 
+<br/>
+
+
 ## `void cymrite_lower(const char* string, char* result)`
 
-**Description:**
+#### Description:
 - Converts all the letters of a string to lowercase
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to convert to lowercase
 - `result`: a char pointer, `char* result`, which stores the new uncapitilized value of the string
 
-**Returns:**
+#### Returns:
 - Void
 
 ### Example
@@ -103,17 +113,20 @@ Output:
 hello world!
 ```
 
+<br/>
+
+
 ## `void cymrite_repeatStr(const char* string, char* result, size_t count)`
 
-**Description:**
+#### Description:
 - Repeats a given string a set amount of times
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to repeat
 - `result`: a char pointer, `char* result`, which stores the result of the repeated string
 - `count`: a size_t unsigned value, `size_t count`, which determines the amount of times to repeat the string
 
-**Returns:**
+#### Returns:
 - Void
 
 ### Example
@@ -132,17 +145,20 @@ Hello World!
 Hello World!
 ```
 
+<br/>
+
+
 ## `void cymrite_trimFront(const char* string, char* result, const char* characters)`
 
-**Description:**
+#### Description:
 - Trims given characters from a string from the front
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to trim
 - `result`: a char pointer, `char* result`, which stores the result of the trimmed string
 - `characters`: a char pointer, `const char* characters`, determining the section of the string to trim (starting from the front)
 
-**Returns:**
+#### Returns:
 - Void
 
 ### Example
@@ -159,17 +175,20 @@ Output:
 World!
 ```
 
+<br/>
+
+
 ## `cymrite_trimBack(const char* string, char* result, const char* characters)`
 
-**Description:**
+#### Description:
 - Trims given characters from a string from the back
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to trim
 - `result`: a char pointer, `char* result`, which stores the result of the trimmed string
 - `characters`: a char pointer, `const char* characters`, determining the section of the string to trim (starting from the back)
 
-**Returns:**
+#### Returns:
 - Void
 
 ### Example
@@ -186,18 +205,21 @@ Output:
 Hello
 ```
 
+<br/>
+
+
 ## `void cymrite_truncateStr(const char* string, char* result, size_t length, const char* suffix)`
 
-**Description:**
+#### Description:
 - Truncates a string to a given length and appends a suffix to the end
 
-**Parameters:**
+#### Parameters:
 - `string`: a char pointer, `const char* string`, the string value to truncate
 - `result`: a char pointer, `const char* result`, which stores the result of the truncated string
 - `length`: a size_t unsigned value, `size_t length`, which determines the length of the string to be truncated (starting from 0). Keep in mind that this total length applies to the length of the suffix as well (see example below).
 - `suffix`: a char pointer, `const char* suffix`, the suffix to append at the end of the string
 
-**Returns:**
+#### Returns:
 - Void
 
 ### Example

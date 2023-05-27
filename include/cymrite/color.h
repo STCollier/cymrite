@@ -10,12 +10,12 @@ typedef struct {
 	uint8_t blue;
 } cymrite_Color;
 
-cymrite_Color cymrite_Color_create(uint8_t red, uint8_t green, uint8_t blue);
+cymrite_Color cymrite_createColor(uint8_t red, uint8_t green, uint8_t blue);
 
-cymrite_Color cymrite_Color_fromValue(uint32_t value);
+cymrite_Color cymrite_colorFromValue(uint32_t value);
 
-uint32_t cymrite_Color_getValue(cymrite_Color color);
+uint32_t cymrite_getColorValue(cymrite_Color color);
 
-bool cymrite_Color_compare(cymrite_Color color1, cymrite_Color color2);
+bool cymrite_compareColor(cymrite_Color color1, cymrite_Color color2);
 
 #endif // CYMRITE_HEADER_COLOR
