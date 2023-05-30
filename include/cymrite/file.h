@@ -9,4 +9,8 @@ void cymrite_writeToFile(const char* filename, char* data);
 
 void cymrite_copyFile(const char* srcFilename, const char* destFilename);
 
+char* cymrite_getFileType(const char* filename);
+
+int cymrite_getLineFromContent(const char* filename, char* data);
+
 #endif // CYMRITE_HEADER_FILE

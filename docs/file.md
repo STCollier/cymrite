@@ -7,7 +7,7 @@ Defined in header [<cymrite/file.h>](../include/cymrite/file.h)
 
 #### Description:
 - Returns the complete file contents of a given file
-
+	
 #### Parameters:
 - `filename`: a char array, `const char* filename`, the filename to get the content from
 
@@ -101,4 +101,68 @@ Output:
 ```
 Hello World!
 Hello World!
+```
+
+<br/>
+
+
+## `char* cymrite_getFileType(const char* filename)`
+
+#### Description:
+- Returns the file type of a given file
+
+#### Parameters:
+- `filename`: a char pointer, `const char* filename`, the filename to return the file type of
+
+#### Returns:
+- A string (char pointer)
+
+### Example
+```c
+const char* files[3] = {
+	"foo.zip",
+	"document.pdf",
+	"bar.txt"
+};
+
+for (int i = 0; i < 3; i++) {
+	printf("%s\n", cymrite_getFileType(files[i]));
+}
+```
+Output:
+```
+zip
+pdf
+txt
+```
+
+<br/>
+
+
+## `int cymrite_getLineFromContent(const char* filename, char* data)`
+
+#### Description:
+- Returns the first found line number of a file based on a string. Returns `-1` if the string does not exist within the file 
+
+#### Parameters:
+- `filename`: a char pointer, `const char* filename`, the filename to search with the given data
+- `data`: a char pointer, `char* data`, the data to search the given file with
+
+#### Returns:
+- An integer
+
+### Example
+```c
+// (foo.txt)
+/*
+Hello World!
+
+Testing 123
+*/
+
+printf("Line: %d\n", cymrite_getLineFromContent("foo.txt", "Testing"));
+```
+Output:
+```
+Line: 3
 ```

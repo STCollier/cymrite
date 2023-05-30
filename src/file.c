@@ -106,3 +106,37 @@ void cymrite_copyFile(const char* srcFilename, const char* destFilename) {
 		fprintf(stderr, "Could not find destination file: %s\n", destFilename);
 	}
 }
+
+char* cymrite_getFileType(const char* filename) {
+	return strrchr(filename, '.') + 1;
+}
+
+int cymrite_getLineFromContent(const char* filename, char* data) {
+	char* buffer = 0;
+    int currentLine = 0;
+    FILE* file = fopen(filename, strcmp(strrchr(filename, '.'), ".txt") == 0 ? "r" : "rb");
+
+    if (file) {
+        size_t buffer_size = 999;
+        buffer = malloc(buffer_size);
+
+        while (fgets(buffer, buffer_size, file) != NULL) {
+            currentLine++;
+
+            if (strstr(buffer, data) != NULL) {
+            	fclose(file);
+
+            	return currentLine;
+            }
+        }
+
+        fclose(file);
+    } else {
+        fprintf(stderr, "Could not find file: %s\n", filename);
+        exit(1);
+    }
+
+    free(buffer);
+
+    return -1;
+}
