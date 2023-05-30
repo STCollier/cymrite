@@ -109,7 +109,7 @@ Orange: 16744192
 - `color2`: a `cymriteColor` to compare with `color1`
 
 #### Returns:
-- A Boolean, true (1) or false (0)
+- A boolean, true (1) or false (0)
 
 ### Example
 ```c
