@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
-#include <cymrite/file.h>
+#include <cymrite/filesystem.h>
 
 char* cymrite_getFileContent(const char* filename) {
   char* buffer = 0;
@@ -139,4 +142,30 @@ int cymrite_getLineFromContent(const char* filename, char* data) {
     free(buffer);
 
     return -1;
+}
+
+void cymrite_deleteFile(const char* filename) {
+    if (remove(filename) != 0) {
+        fprintf(stderr, "Unable to delete file: %s\n", filename);
+    }
+}
+
+void cymrite_createDirectory(const char* directoryName) {
+    struct stat st = {0};
+
+    if (stat(directoryName, &st) == -1) {
+        mkdir(directoryName, 0700);
+    } else {
+        fprintf(stderr, "Creating directory with this name will result in an overwrite\n");
+    }
+}
+
+void cymrite_removeDirectory(const char* directoryName) {
+    struct stat st = {0};
+
+    if (stat(directoryName, &st) != -1) {
+        rmdir(directoryName);
+    } else {
+        fprintf(stderr, "Unable to delete directory\n");
+    }
 }

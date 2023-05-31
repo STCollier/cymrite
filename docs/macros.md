@@ -12,9 +12,6 @@ Defined in header [<cymrite/macros.h>](../include/cymrite/macros.h)
 - `a`: the first value to concatenate
 - `b`: the second value to concatenate
 
-#### Returns:
-- N/A
-
 ### Example
 ```c
 printf("%d", CYMRITE_CAT(6, 5));
@@ -35,9 +32,6 @@ Output:
 #### Parameters:
 - `a`: the first macro to concatenate
 - `b`: the second maco to concatenate
-
-#### Returns:
-- N/A
 
 ### Example
 ```c
@@ -65,9 +59,6 @@ Output:
 #### Parameters:
 - `x`: the value to stringify
 
-#### Returns:
-- N/A
-
 ### Example
 ```c
 printf("%s", CYMRITE_STRINGIFY(123));
@@ -88,9 +79,6 @@ Output:
 #### Parameters:
 - `x`: the error message to display
 
-#### Returns:
-- N/A
-
 ### Example
 ```c
 CYMRITE_ERROR("This is an error!")
@@ -109,9 +97,6 @@ Output:
 	
 #### Parameters:
 - `x`: the warning message to display
-
-#### Returns:
-- N/A
 
 ### Example
 ```c
@@ -132,9 +117,6 @@ Output:
 #### Parameters:
 - `x`: the message to log
 
-#### Returns:
-- N/A
-
 ### Example
 ```c
 CYMRITE_LOG("This is a message.")
@@ -153,9 +135,6 @@ Output:
 	
 #### Parameters:
 - `arr`: the arr to get the size of
-
-#### Returns:
-- N/A
 
 ### Example
 ```c
@@ -178,9 +157,6 @@ Size: 5
 	
 #### Parameters:
 - `x`: the variable to supress unused warnings from
-
-#### Returns:
-- N/A
 
 ### Example
 ```c

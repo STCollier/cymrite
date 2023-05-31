@@ -13,4 +13,10 @@ char* cymrite_getFileType(const char* filename);
 
 int cymrite_getLineFromContent(const char* filename, char* data);
 
+void cymrite_deleteFile(const char* filename);
+
+void cymrite_createDirectory(const char* directoryName);
+
+void cymrite_removeDirectory(const char* directoryName);
+
 #endif // CYMRITE_HEADER_FILE

@@ -1,6 +1,6 @@
-# Files
+# File System
 
-Defined in header [<cymrite/file.h>](../include/cymrite/file.h)
+Defined in header [<cymrite/filesystem.h>](../include/cymrite/filesystem.h)
 
 
 ## `char* cymrite_getFileContent(const char* filename)`
@@ -165,4 +165,61 @@ printf("Line: %d\n", cymrite_getLineFromContent("foo.txt", "Testing"));
 Output:
 ```
 Line: 3
+```
+
+<br/>
+
+
+## `void cymrite_deleteFile(const char* filename)`
+
+#### Description:
+- Deletes a given file if it exists
+
+#### Parameters:
+- `filename`: a char pointer, `const char* filename`, the filename to delete
+
+#### Returns:
+- Void
+
+### Example
+```c
+cymrite_deleteFile("foo.txt");
+```
+
+<br/>
+
+
+## `void cymrite_createDirectory(const char* directoryName)`
+
+#### Description:
+- Creates a directory with a given name. The directory will not be created if it will result in an overwrite
+
+#### Parameters:
+- `directoryName`: a char pointer, `const char* directoryName`, the name of the directory to create
+
+#### Returns:
+- Void
+
+### Example
+```c
+cymrite_createDirectory("files");
+```
+
+<br/>
+
+
+## `void cymrite_removeDirectory(const char* directoryName)`
+
+#### Description:
+- Deletes a directory with a given name if it exists
+
+#### Parameters:
+- `directoryName`: a char pointer, `const char* directoryName`, the name of the directory to delete
+
+#### Returns:
+- Void
+
+### Example
+```c
+cymrite_deleteDirectory("files");
 ```
