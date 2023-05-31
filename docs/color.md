@@ -30,7 +30,7 @@ typedef struct {
 - `blue`: an unsigned 8 bit integer, `const uint8_t blue`, the blue value of the created color
 
 #### Returns:
-- `cymriteColor`
+- `cymrite_Color`
 
 ### Example
 ```c
@@ -80,7 +80,7 @@ Orange: (255, 127, 0)
 - Function that returns the RGB color value of a `cymrite_Color` in integer format
 
 #### Parameters:
-- `color`: a `cymriteColor`, used to convert to integer format
+- `color`: a `cymrite_Color`, used to convert to integer format
 
 #### Returns:
 - An unsigned 32 bit integer, `uint32_t`
@@ -105,8 +105,8 @@ Orange: 16744192
 - Function that checks if two `cymrite_Color`s are the same
 
 #### Parameters:
-- `color1`: a `cymriteColor` to compare with `color2`
-- `color2`: a `cymriteColor` to compare with `color1`
+- `color1`: a `cymrite_Color` to compare with `color2`
+- `color2`: a `cymrite_Color` to compare with `color1`
 
 #### Returns:
 - A boolean, true (1) or false (0)
