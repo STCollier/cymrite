@@ -1,147 +1,240 @@
-#include <cymrite/color.h>
-#include <cymrite/terminal.h>
 #include <fcntl.h>
+#include <math.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
+#include "../include/cymrite/color.h"
+#include "../include/cymrite/terminal.h"
 
-cymrite_TerminalMode cymrite_TerminalMode_create() {
-	cymrite_TerminalMode terminalMode;
-	tcgetattr(STDIN_FILENO, &terminalMode.cookedMode);
-	terminalMode.blockingMode = fcntl(STDIN_FILENO, F_GETFL);
-	terminalMode.blocking = true;
-	terminalMode.echo = false;
-	terminalMode.canonical = false;
-	terminalMode.signals = false;
-	terminalMode.processing = false;
-	cymrite_TerminalMode_lock(&terminalMode);
-	return terminalMode;
+static FILE* cymrite_terminalInput;
+static FILE* cymrite_terminalOutput;
+static int cymrite_terminalInputDescriptor;
+
+static int cymrite_terminalInputBlockingStatus;
+static struct termios cymrite_terminalInputCookedMode;
+
+static bool cymrite_terminalInputBlocking;
+static bool cymrite_terminalInputEcho;
+static bool cymrite_terminalInputCanonical;
+static bool cymrite_terminalInputSignals;
+static bool cymrite_terminalOutputProcessing;
+
+static void cymrite_updateTerminal() {
+	fcntl(cymrite_terminalInputDescriptor, F_SETFL, cymrite_terminalInputBlockingStatus | (O_NONBLOCK * !cymrite_terminalInputBlocking));
+	struct termios rawMode = cymrite_terminalInputCookedMode;
+	rawMode.c_iflag &= ~((ICRNL * !cymrite_terminalInputSignals) | (IXON * !cymrite_terminalInputSignals));
+	rawMode.c_lflag &= ~((ECHO * !cymrite_terminalInputEcho) | (ICANON * !cymrite_terminalInputCanonical) | (IEXTEN * !cymrite_terminalInputSignals) | (ISIG * !cymrite_terminalInputSignals));
+	rawMode.c_oflag &= ~(OPOST * !cymrite_terminalOutputProcessing);
+	tcsetattr(cymrite_terminalInputDescriptor, TCSANOW, &rawMode);
 }
 
-void cymrite_TerminalMode_delete(cymrite_TerminalMode* terminalMode) {
-	cymrite_TerminalMode_unlock(terminalMode);
+cymrite_TerminalPosition cymrite_TerminalPosition_create(const int row, const int column) {
+	cymrite_TerminalPosition position;
+	position.row = row;
+	position.column = column;
+	return position;
 }
 
-void cymrite_TerminalMode_setBlocking(cymrite_TerminalMode* terminalMode, const bool value) {
-	terminalMode->blocking = value;
-	if (terminalMode->locked) {
-		cymrite_TerminalMode_lock(terminalMode);
+void cymrite_initializeTerminal(FILE* input, FILE* output) {
+	cymrite_terminalInput = input;
+	cymrite_terminalOutput = output;
+	cymrite_terminalInputDescriptor = fileno(input);
+	cymrite_terminalInputBlockingStatus = fcntl(cymrite_terminalInputDescriptor, F_GETFL);
+	tcgetattr(cymrite_terminalInputDescriptor, &cymrite_terminalInputCookedMode);
+	cymrite_terminalInputBlocking = true;
+	cymrite_terminalInputEcho = true;
+	cymrite_terminalInputCanonical = true;
+	cymrite_terminalInputSignals = true;
+	cymrite_terminalOutputProcessing = true;
+	cymrite_updateTerminal();
+}
+
+void cymrite_terminateTerminal() {
+	fcntl(cymrite_terminalInputDescriptor, F_SETFL, cymrite_terminalInputBlockingStatus);
+	tcsetattr(cymrite_terminalInputDescriptor, TCSANOW, &cymrite_terminalInputCookedMode);
+	cymrite_resetTerminalInputStyles();
+}
+
+void cymrite_setTerminalInputBlocking(const bool value) {
+	if (cymrite_terminalInputBlocking != value) {
+		cymrite_terminalInputBlocking = value;
+		cymrite_updateTerminal();
 	}
 }
 
-void cymrite_TerminalMode_setEcho(cymrite_TerminalMode* terminalMode, const bool value) {
-	terminalMode->echo = value;
-	if (terminalMode->locked) {
-		cymrite_TerminalMode_lock(terminalMode);
+void cymrite_setTerminalInputEcho(const bool value) {
+	if (cymrite_terminalInputEcho != value) {
+		cymrite_terminalInputEcho = value;
+		cymrite_updateTerminal();
 	}
 }
 
-void cymrite_TerminalMode_setCanonical(cymrite_TerminalMode* terminalMode, const bool value) {
-	terminalMode->canonical = value;
-	if (terminalMode->locked) {
-		cymrite_TerminalMode_lock(terminalMode);
+void cymrite_setTerminalInputCanonical(const bool value) {
+	if (cymrite_terminalInputCanonical != value) {
+		cymrite_terminalInputCanonical = value;
+		cymrite_updateTerminal();
 	}
 }
 
-void cymrite_TerminalMode_setSignals(cymrite_TerminalMode* terminalMode, const bool value) {
-	terminalMode->signals = value;
-	if (terminalMode->locked) {
-		cymrite_TerminalMode_lock(terminalMode);
+void cymrite_setTerminalInputSignals(const bool value) {
+	if (cymrite_terminalInputSignals != value) {
+		cymrite_terminalInputSignals = value;
+		cymrite_updateTerminal();
 	}
 }
 
-void cymrite_TerminalMode_setProcessing(cymrite_TerminalMode* terminalMode, const bool value) {
-	terminalMode->processing = value;
-	if (terminalMode->locked) {
-		cymrite_TerminalMode_lock(terminalMode);
+void cymrite_setTerminalOutputProcessing(const bool value) {
+	if (cymrite_terminalOutputProcessing != value) {
+		cymrite_terminalOutputProcessing = value;
+		cymrite_updateTerminal();
 	}
 }
 
-void cymrite_TerminalMode_lock(cymrite_TerminalMode* terminalMode) {
-	struct termios rawMode = terminalMode->cookedMode;
-	rawMode.c_iflag &= ~((ICRNL * !terminalMode->signals) | (IXON * !terminalMode->signals));
-	rawMode.c_lflag &= ~((ECHO * !terminalMode->echo) | (ICANON * !terminalMode->canonical) | (IEXTEN * !terminalMode->signals) | (ISIG * !terminalMode->signals));
-	rawMode.c_oflag &= ~(OPOST * !terminalMode->processing);
-	tcsetattr(STDIN_FILENO, TCSANOW, &rawMode);
-	fcntl(STDIN_FILENO, F_SETFL, terminalMode->blockingMode | (O_NONBLOCK * !terminalMode->blocking));
-	terminalMode->locked = true;
+void cymrite_setTerminalForegroundColor(const cymrite_Color color) {
+	fprintf(cymrite_terminalOutput, "\x1B[38;2;%i;%i;%im", color.red, color.green, color.blue);
 }
 
-void cymrite_TerminalMode_unlock(cymrite_TerminalMode* terminalMode) {
-	tcsetattr(STDIN_FILENO, TCSANOW, &terminalMode->cookedMode);
-	fcntl(STDIN_FILENO, F_SETFL, terminalMode->blockingMode);
-	terminalMode->locked = false;
+void cymrite_resetTerminalForegroundColor() {
+	fprintf(cymrite_terminalOutput, "\x1B[38m");
 }
 
-void cymrite_setBoldText(const bool value) {
-	printf(value ? "\x1b[1m" : "\x1b[21m");
+void cymrite_setTerminalBackgroundColor(const cymrite_Color color) {
+	fprintf(cymrite_terminalOutput, "\x1B[48;2;%i;%i;%im", color.red, color.green, color.blue);
 }
 
-void cymrite_setDimText(const bool value) {
-	printf(value ? "\x1b[2m" : "\x1b[22m");
+void cymrite_resetTerminalBackgroundColor() {
+	fprintf(cymrite_terminalOutput, "\x1B[48m");
 }
 
-void cymrite_setItalicText(const bool value) {
-	printf(value ? "\x1b[3m" : "\x1b[23m");
+void cymrite_setTerminalTextBold(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 21 - value * 20);
 }
 
-void cymrite_setUnderlineText(const bool value) {
-	printf(value ? "\x1b[4m" : "\x1b[24m");
+void cymrite_setTerminalTextItalic(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 23 - value * 20);
 }
 
-void cymrite_setBlinkText(const bool value) {
-	printf(value ? "\x1b[5m" : "\x1b[25m");
+void cymrite_setTerminalTextUnderline(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 24 - value * 20);
 }
 
-void cymrite_setInverseText(const bool value) {
-	printf(value ? "\x1b[7m" : "\x1b[27m");
+void cymrite_setTerminalTextBlinking(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 25 - value * 20);
 }
 
-void cymrite_setInvisibleText(const bool value) {
-	printf(!value ? "\x1b[8m" : "\x1b[28m");
+void cymrite_setTerminalColorsSwapped(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 27 - value * 20);
 }
 
-void cymrite_setStrikethroughText(const bool value) {
-	printf(value ? "\x1b[9m" : "\x1b[29m");
+void cymrite_setTerminalTextVisible(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 8 + value * 20);
 }
 
-void cymrite_setForegroundColor(cymrite_Color color) {
-	printf("\x1b[38;2;%i;%i;%im", color.red, color.green, color.blue);
+void cymrite_setTerminalTextStrikethrough(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[%im", 29 - value * 20);
 }
 
-void cymrite_resetForegroundColor() {
-	printf("\x1b[38m");
+void cymrite_resetTerminalStyles() {
+	fprintf(cymrite_terminalOutput, "\x1B[0m");
 }
 
-void cymrite_setBackgroundColor(cymrite_Color color) {
-	printf("\x1b[48;2;%i;%i;%im", color.red, color.green, color.blue);
+void cymrite_clearTerminalScreen() {
+	fprintf(cymrite_terminalOutput, "\x1B[2J");
 }
 
-void cymrite_resetBackgroundColor() {
-	printf("\x1b[48m");
+void cymrite_clearTerminalLine() {
+	fprintf(cymrite_terminalOutput, "\x1B[2K");
 }
 
-void cymrite_resetStyle() {
-	printf("\x1b[0m");
+void cymrite_clearTerminalScreen() {
+	fprintf(cymrite_terminalOutput, "\x1B[2J");
 }
 
-void cymrite_clearScreen() {
-	printf("\x1b[2J");
+cymrite_TerminalPosition cymrite_getTerminalCursorPosition() {
+	const bool canonical = cymrite_terminalInputCanonical;
+	cymrite_setTerminalInputCanonical(false);
+	fprinf(cymrite_terminalOutput, "\x1B[6n");
+	cymrite_TerminalPosition position;
+	fscanf(cymrite_terminalInput, "\x1B[%i;%iR", &position.row, &position.column);
+	cymrite_setTerminalInputCanonical(canonical);
+	return cymrite_TerminalPosition_create(position.row - 1, position.column - 1);
 }
 
-void cymrite_clearLine() {
-	printf("\x1b[2K"); 
+void cymrite_setTerminalCursorPosition(const cymrite_TerminalPosition position) {
+	fprintf(cymrite_terminalOutput, "\x1B[%i;%iH", position.row + 1, position.column + 1);
 }
 
-void cymrite_setInvisibleCursor(const bool value) {
-	printf(!value ? "\x1b[?25h" : "\x1b[?25l");
+void cymrite_moveTerminalCursorPosition(const cymrite_TerminalPosition difference) {
+	if (difference.row) {
+		fprintf(cymrite_terminalOutput, "\x1B[%i%c", abs(difference.row), "CD"[difference.row < 0]);
+	}
+	if (difference.column) {
+		fprintf(cymrite_terminalOutput, "\x1B[%i%c", abs(difference.column), "BA"[difference.column < 0]);
+	}
 }
 
-void cymrite_setAlternativeCursor(const bool value) {
-	printf(value ? "\x1b[s" : "\x1b[u");
+void cymrite_setTerminalCursorVisible(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[?25%c", "lh"[value]);
 }
 
-void cymrite_setAlternativeScreen(const bool value) {
-	printf(value ? "\x1b[?47h" : "\x1b[?47l");
+void cymrite_setTerminalCursorAlternative(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[ %i", 8 - value);
+}
+
+void cymrite_setTerminalScreenAlternative(const bool value) {
+	fprintf(cymrite_terminalOutput, "\x1B[?47%c", "lh"[value]);
+}
+
+cymrite_TerminalPosition cymrite_getTerminalScreenSize() {
+	winsize size;
+	ioctl(cymrite_terminalInputDescriptor, TIOCGWINSZ, &size);
+	return cymrite_TerminalPosition_create(size.ws_row, size.ws_col);
+}
+
+char cymrite_readTerminalCharacter() {
+	const bool blocking = cymrite_terminalInputBlocking;
+	const bool canonical = cymrite_terminalInputCanonical;
+	cymrite_setTerminalInputBlocking(false);
+	cymrite_setTerminalInputCanonical(false);
+	const char input = fgetc(cymrite_terminalInput);
+	cymrite_setTerminalInputBlocking(blocking);
+	cymrite_setTerminalInputCanonical(canonical);
+	return input;
+}
+
+char* cymrite_readTerminalString() {
+	const bool blocking = cymrite_terminalInputBlocking;
+	const bool canonical = cymrite_terminalInputCanonical;
+	cymrite_setTerminalInputBlocking(false);
+	cymrite_setTerminalInputCanonical(false);
+	size_t chunkSize = 4096;
+	size_t inputSize = 0;
+	char* input = malloc(chunkSize);
+	while (true) {
+		const size_t bytesRead = fread(input + inputSize, sizeof(char), chunkSize, cymrite_terminalInput);
+		if (bytesRead == chunkSize) {
+			inputSize += chunkSize;
+			chunkSize *= 2;
+			input = realloc(input, inputSize + chunkSize);
+		} else {
+			input[inputSize + bytesRead] = '\0';
+			break;
+		}
+	}
+	cymrite_setTerminalInputBlocking(blocking);
+	cymrite_setTerminalInputCanonical(canonical);
+	return input;
+	// TODO: return a structure containing both the resulting string and `inputSize` in case of null-bytes
+}
+
+void cymrite_backspaceTerminal(const size_t count) {
+	if (count) {
+		char spaces[count];
+		memset(spaces, ' ', count);
+		fprintf("\x1B[%iD%s\x1B[%iD", count, spaces, count);
+	}
 }

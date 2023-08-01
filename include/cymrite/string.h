@@ -1,24 +1,26 @@
 #ifndef CYMRITE_HEADER_STRING
-#define CYMRITE_HEADER_STRING
+#	define CYMRITE_HEADER_STRING
 
-#include <stddef.h>
+#	include <stddef.h>
 
-int cymrite_countTokens(const char* string);
+#	define CYMRITE_WHITESPACE "\x9\xA\xB\xC\xD\x20\x85\xA0"
 
-int cymrite_countChar(const char* string, char character);
+int cymrite_countStringTokens(const char* string);
 
-void cymrite_upper(const char* string, char* result);
+int cymrite_countStringCharacter(const char* string, char character);
 
-void cymrite_lower(const char* string, char* result);
+int cymrite_findStringLineIndex(const char* string, const char* line);
 
-void cymrite_repeatStr(const char* string, char* result, size_t count);
+char* cymrite_uppercaseString(const char* string);
 
-void cymrite_trimFront(const char* string, char* result, const char* characters);
+char* cymrite_lowercaseString(const char* string);
 
-void cymrite_trimBack(const char* string, char* result, const char* characters);
+char* cymrite_repeatString(const char* string, size_t count);
 
-void cymrite_truncateStr(const char* string, char* result, size_t length, const char* suffix);
+char* cymrite_trimStringFront(const char* string, const char* characters);
 
-extern char* cymrite_whitespace;
+char* cymrite_trimStringBack(const char* string, const char* characters);
 
-#endif // CYMRITE_HEADER_STRING
+char* cymrite_truncateString(const char* string, size_t length, const char* suffix);
+
+#endif

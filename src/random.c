@@ -1,5 +1,5 @@
-#include <cymrite/random.h>
 #include <stdlib.h>
+#include "../include/cymrite/random.h"
 
 void cymrite_seedRandom(const int seed) {
 	srand(seed);

@@ -1,22 +1,20 @@
-#ifndef CYMRITE_HEADER_FILE
-#define CYMRITE_HEADER_FILE
+#ifndef CYMRITE_HEADER_FILESYSTEM
+#	define CYMRITE_HEADER_FILESYSTEM
 
-char* cymrite_getFileContent(const char* filename);
+#	include <stddef.h>
 
-char* cymrite_getLineContent(const char* filename, int lineNumber);
+char* cymrite_readFile(const char* filePath);
 
-void cymrite_writeToFile(const char* filename, char* data);
+void cymrite_writeFile(const char* filePath, const char* data);
 
-void cymrite_copyFile(const char* srcFilename, const char* destFilename);
+void cymrite_copyFile(const char* sourceFilePath, const char* destinationFilePath);
 
-char* cymrite_getFileType(const char* filename);
+char* cymrite_getFileExtension(const char* filePath);
 
-int cymrite_getLineFromContent(const char* filename, char* data);
+void cymrite_deleteFile(const char* filePath);
 
-void cymrite_deleteFile(const char* filename);
+void cymrite_createDirectory(const char* directoryPath);
 
-void cymrite_createDirectory(const char* directoryName);
+void cymrite_deleteDirectory(const char* directoryPath);
 
-void cymrite_removeDirectory(const char* directoryName);
-
-#endif // CYMRITE_HEADER_FILE
+#endif

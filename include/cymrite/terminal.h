@@ -1,75 +1,78 @@
 #ifndef CYMRITE_HEADER_TERMINAL
-#define CYMRITE_HEADER_TERMINAL
+#	define CYMRITE_HEADER_TERMINAL
 
-#include <cymrite/color.h>
-#include <stdbool.h>
-#include <termios.h>
+#	include <stdbool.h>
+#	include <stddef.h>
+#	include <stdlib.h>
+#	include "../color.h"
 
 typedef struct {
-	struct termios cookedMode;
-	int blockingMode;
+	int row;
+	int column;
+} cymrite_TerminalPosition;
 
-	bool blocking;
-	bool echo;
-	bool canonical;
-	bool signals;
-	bool processing;
+cymrite_TerminalPosition cymrite_TerminalPosition_create(int row, int column);
 
-	bool locked;
-} cymrite_TerminalMode;
+void cymrite_initializeTerminal(FILE* input, FILE* output);
 
-cymrite_TerminalMode cymrite_TerminalMode_create();
+void cymrite_terminateTerminal();
 
-void cymrite_TerminalMode_delete(cymrite_TerminalMode* terminalMode);
+void cymrite_setTerminalInputBlocking(bool value);
 
-void cymrite_TerminalMode_setBlocking(cymrite_TerminalMode* terminalMode, bool value);
+void cymrite_setTerminalInputEcho(bool value);
 
-void cymrite_TerminalMode_setEcho(cymrite_TerminalMode* terminalMode, bool value);
+void cymrite_setTerminalInputCanonical(bool value);
 
-void cymrite_TerminalMode_setCanonical(cymrite_TerminalMode* terminalMode, bool value);
+void cymrite_setTerminalInputSignals(bool value);
 
-void cymrite_TerminalMode_setSignals(cymrite_TerminalMode* terminalMode, bool value);
+void cymrite_setTerminalOutputProcessing(bool value);
 
-void cymrite_TerminalMode_setProcessing(cymrite_TerminalMode* terminalMode, bool value);
+void cymrite_setTerminalForegroundColor(cymrite_Color color);
 
-void cymrite_TerminalMode_lock(cymrite_TerminalMode* terminalMode);
+void cymrite_resetTerminalForegroundColor();
 
-void cymrite_TerminalMode_unlock(cymrite_TerminalMode* terminalMode);
+void cymrite_setTerminalBackgroundColor(cymrite_Color color);
 
-void cymrite_setBoldText(bool value);
+void cymrite_resetTerminalBackgroundColor();
 
-void cymrite_setDimText(bool value);
+void cymrite_setTerminalTextBold(bool value);
 
-void cymrite_setItalicText(bool value);
+void cymrite_setTerminalTextItalic(bool value);
 
-void cymrite_setUnderlineText(bool value);
+void cymrite_setTerminalTextUnderline(bool value);
 
-void cymrite_setBlinkText(bool value);
+void cymrite_setTerminalTextBlinking(bool value);
 
-void cymrite_setInverseText(bool value);
+void cymrite_setTerminalColorsSwapped(bool value);
 
-void cymrite_setInvisibleText(bool value);
+void cymrite_setTerminalTextVisible(bool value);
 
-void cymrite_setStrikethroughText(bool value);
+void cymrite_setTerminalTextStrikethrough(bool value);
 
-void cymrite_setForegroundColor(cymrite_Color color);
+void cymrite_resetTerminalStyles();
 
-void cymrite_resetForegroundColor();
+void cymrite_clearTerminalScreen();
 
-void cymrite_setBackgroundColor(cymrite_Color color);
+void cymrite_clearTerminalLine();
 
-void cymrite_resetBackgroundColor();
+cymrite_TerminalPosition cymrite_getTerminalCursorPosition();
 
-void cymrite_resetStyle();
+void cymrite_setTerminalCursorPosition(cymrite_TerminalPosition position);
 
-void cymrite_clearScreen();
+void cymrite_moveTerminalCursorPosition(cymrite_TerminalPosition difference);
 
-void cymrite_clearLine();
+void cymrite_setTerminalCursorVisible(bool value);
 
-void cymrite_setInvisibleCursor(bool value);
+void cymrite_setTerminalCursorAlternative(bool value);
 
-void cymrite_setAlternativeCursor(bool value);
+void cymrite_setTerminalScreenAlternative(bool value);
 
-void cymrite_setAlternativeScreen(bool value);
+cymrite_TerminalPosition cymrite_getTerminalScreenSize();
 
-#endif // CYMRITE_HEADER_TERMINAL
+char cymrite_readTerminalCharacter();
+
+char* cymrite_readTerminalString();
+
+void cymrite_backspaceTerminal(size_t count);
+
+#endif

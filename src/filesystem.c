@@ -1,171 +1,89 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "../include/cymrite/filesystem.h"
 
-#include <cymrite/filesystem.h>
-
-char* cymrite_getFileContent(const char* filename) {
-  char* buffer = 0;
-  long length;
-  FILE* file = fopen(filename, strcmp(strrchr(filename, '.'), ".txt") == 0 ? "r" : "rb");
-
-  if (file) {
-    fseek(file, 0, SEEK_END);
-    length = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    buffer = malloc(length+1);
-
-    if (buffer) {
-     	fread(buffer, 1, length, file);
-     	buffer[length] = '\0'; // Null terminate string
-    }
-
-    fclose(file);
-    return buffer;
-
-  } else {
-   	fprintf(stderr, "Could not find file: %s\n", filename);
-	exit(1);
-  }
-
-  free(buffer);
-
-  return NULL;
+char* cymrite_readFile(const char* const filePath) {
+	FILE* const file = fopen(filePath, strcmp(strrchr(filePath, '.'), ".txt") ? "rb" : "r");
+	if (!file) {
+		fprintf(stderr, "Could not open file: %s\n", filePath);
+		return;
+	}
+	fseek(file, 0, SEEK_END);
+	const size_t length = ftell(file);
+	fseek(file, 0, SEEK_SET);
+	char buffer[length + 1];
+	if (buffer) {
+		fread(buffer, sizeof(char), length, file);
+		buffer[length] = '\0';
+	}
+	fclose(file);
+	return buffer;
 }
 
-char* cymrite_getLineContent(const char* filename, int lineNumber) {
-    char* buffer = 0;
-    int currentLine = 0;
-    FILE* file = fopen(filename, strcmp(strrchr(filename, '.'), ".txt") == 0 ? "r" : "rb");
-
-    if (file) {
-        size_t buffer_size = 999;
-        buffer = malloc(buffer_size);
-
-        while (fgets(buffer, buffer_size, file) != NULL) {
-            currentLine++;
-
-            if (currentLine == lineNumber) {
-                fclose(file);
-                return buffer;
-            }
-        }
-
-        fclose(file);
-    } else {
-        fprintf(stderr, "Could not find file: %s\n", filename);
-        exit(1);
-    }
-
-    free(buffer);
-
-    return NULL;
+void cymrite_writeFile(const char* const filePath, const char* const data) {
+	FILE* const file = fopen(filePath, strcmp(strrchr(filePath, '.'), ".txt") ? "wb" : "w");
+	if (!file) {
+		fprintf(stderr, "Could not open file: %s\n", filePath);
+		return;
+	}
+	if (strlen(data)) {
+		fputs(data, file);
+	}
+	fclose(file);
 }
 
-void cymrite_writeToFile(const char* filename, char* data) {
-	FILE* file = fopen(filename, strcmp(strrchr(filename, '.'), ".txt") == 0 ? "w" : "wb");
+void cymrite_copyFile(const char* sourceFilePath, const char* destinationFilePath) {
+	FILE* const file1 = fopen(sourceFilePath, strcmp(strrchr(sourceFilePath, '.'), ".txt") ? "rb" : "r");
+	if (!file1) {
+		fprintf(stderr, "Could not open file: %s\n", sourceFilePath);
+		return;
+	}
+	FILE* const file2 = fopen(destinationFilePath, strcmp(strrchr(destinationFilePath, '.'), ".txt") ? "wb" : "w");
+	if (!file2) {
+		fprintf(stderr, "Could not open file: %s\n", destinationFilePath);
+		return;
+	}
+	fseek(file1, 0, SEEK_END);
+	const size_t length = ftell(file1);
+	fseek(file1, 0, SEEK_SET);
+	char* const buffer = malloc(length + 1);
+	if (buffer) {
+		fread(buffer, 1, length, file1);
+		buffer[length] = '\0';
+	}
+	fclose(file1);
+	fputs(buffer, file2)
+	fclose(file2);
+}
 
-	if (file) {
-		if (strlen(data) > 0) {
-			fputs(data, file);
-		}
+const char* cymrite_getFileExtension(const char* const filePath) {
+	return strrchr(filePath, '.') + 1;
+}
 
-		fclose(file);
-	} else {
-		fprintf(stderr, "Could not find file: %s\n", filename);
-        exit(1);
+void cymrite_deleteFile(const char* const filePath) {
+	if (remove(filePath)) {
+		fprintf(stderr, "Could not delete file: %s\n", filePath);
 	}
 }
 
-void cymrite_copyFile(const char* srcFilename, const char* destFilename) {
-	char* buffer = 0;
-  	long length;
-
-	FILE* file1 = fopen(srcFilename, strcmp(strrchr(srcFilename, '.'), ".txt") == 0 ? "r" : "rb");
-	FILE* file2 = fopen(destFilename, strcmp(strrchr(destFilename, '.'), ".txt") == 0 ? "w" : "wb");
-
-	if (file1) {
-		fseek(file1, 0, SEEK_END);
-	    length = ftell(file1);
-	    fseek(file1, 0, SEEK_SET);
-	    buffer = malloc(length+1);
-
-	    if (buffer) {
-	     	fread(buffer, 1, length, file1);
-	     	buffer[length] = '\0'; // Null terminate string
-	    }
-
-	    fclose(file1);
-	} else {
-		fprintf(stderr, "Could not find source file: %s\n", srcFilename);
+void cymrite_createDirectory(const char* const directoryPath) {
+	struct stat st = { 0 }; // ???
+	if (stat(directoryPath, &st) != -1) {
+		fprintf(stderr, "Creating directory with this name will result in an overwrite\n");
 	}
+	mkdir(directoryPath, 0700); // ???
+}
 
-	if (file2) {
-		fputs(buffer, file2);
-	} else {
-		fprintf(stderr, "Could not find destination file: %s\n", destFilename);
+void cymrite_removeDirectory(const char* const directoryPath) {
+	struct stat st = { 0 }; // ???
+	if (stat(directoryPath, &st) == -1) {
+		fprintf(stderr, "Could not delete directory: %s\n", directoryPath);
+		return;
 	}
-}
-
-char* cymrite_getFileType(const char* filename) {
-	return strrchr(filename, '.') + 1;
-}
-
-int cymrite_getLineFromContent(const char* filename, char* data) {
-	char* buffer = 0;
-    int currentLine = 0;
-    FILE* file = fopen(filename, strcmp(strrchr(filename, '.'), ".txt") == 0 ? "r" : "rb");
-
-    if (file) {
-        size_t buffer_size = 999;
-        buffer = malloc(buffer_size);
-
-        while (fgets(buffer, buffer_size, file) != NULL) {
-            currentLine++;
-
-            if (strstr(buffer, data) != NULL) {
-            	fclose(file);
-
-            	return currentLine;
-            }
-        }
-
-        fclose(file);
-    } else {
-        fprintf(stderr, "Could not find file: %s\n", filename);
-        exit(1);
-    }
-
-    free(buffer);
-
-    return -1;
-}
-
-void cymrite_deleteFile(const char* filename) {
-    if (remove(filename) != 0) {
-        fprintf(stderr, "Unable to delete file: %s\n", filename);
-    }
-}
-
-void cymrite_createDirectory(const char* directoryName) {
-    struct stat st = {0};
-
-    if (stat(directoryName, &st) == -1) {
-        mkdir(directoryName, 0700);
-    } else {
-        fprintf(stderr, "Creating directory with this name will result in an overwrite\n");
-    }
-}
-
-void cymrite_removeDirectory(const char* directoryName) {
-    struct stat st = {0};
-
-    if (stat(directoryName, &st) != -1) {
-        rmdir(directoryName);
-    } else {
-        fprintf(stderr, "Unable to delete directory\n");
-    }
+	rmdir(directoryPath);
 }
