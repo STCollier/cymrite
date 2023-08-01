@@ -52,7 +52,7 @@ bool cymrite_Line_compare(const cymrite_Line line1, const cymrite_Line line2) {
 	return cymrite_Point_compare(line1.start, line2.start) && cymrite_Point_compare(line1.end, line2.end) || cymrite_Point_compare(line1.end, line2.start) && cymrite_Point_compare(line1.start, line2.end);
 }
 
-bool cymrite_Line_length(const cymrite_Line line) {
+double cymrite_Line_length(const cymrite_Line line) {
 	return cymrite_Point_distance(line.start, line.end);
 }
 
@@ -72,10 +72,10 @@ bool cymrite_Line_collisionCircle(const cymrite_Line line, const cymrite_Circle 
 		return true;
 	}
 	double lineLength = cymrite_Line_length(line);
-	double dot = (((circle.x - line.start.x) * (line.end.x-line.start.x)) + ((circle.y-line.start.y) * (line.end.y-line.start.y))) / (lineLength * lineLength);
+	double dot = (((circle.center.x - line.start.x) * (line.end.x-line.start.x)) + ((circle.center.y-line.start.y) * (line.end.y-line.start.y))) / (lineLength * lineLength);
 	double closestX = line.start.x + (dot * (line.end.x - line.start.x));
 	double closestY = line.start.y + (dot * (line.end.y - line.start.y));
-	return cymrite_Line_collisionPoint(line, cymrite_Point_create(closestX, closestY)) && (cymrite_Point_distance(cymrite_Point_create(closestX, circle.x), cymrite_Point_create(closestY, circle.y)) <= circle.radius);
+	return cymrite_Line_collisionPoint(line, cymrite_Point_create(closestX, closestY)) && (cymrite_Point_distance(cymrite_Point_create(closestX, circle.center.x), cymrite_Point_create(closestY, circle.center.y)) <= circle.radius);
 }
 
 bool cymrite_Line_collisionRectangle(const cymrite_Line line, const cymrite_Rectangle rectangle) {
@@ -106,6 +106,7 @@ double cymrite_Circle_area(const cymrite_Circle circle) {
 
 double cymrite_Circle_circumference(const cymrite_Circle circle) {
 	return CYMRITE_TAU * circle.radius;
+}
 
 bool cymrite_Circle_collisionPoint(const cymrite_Circle circle, const cymrite_Point point) {
 	return cymrite_Point_collisionCircle(point, circle);

@@ -2,7 +2,7 @@
 #	define CYMRITE_HEADER_GEOMETRY
 
 #	include <stdbool.h>
-#	include "../include/cymrite/math.h"
+#	include "./math.h"
 
 typedef cymrite_Vector2 cymrite_Point;
 

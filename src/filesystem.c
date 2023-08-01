@@ -11,12 +11,12 @@ char* cymrite_readFile(const char* const filePath) {
 	FILE* const file = fopen(filePath, strcmp(strrchr(filePath, '.'), ".txt") ? "rb" : "r");
 	if (!file) {
 		fprintf(stderr, "Could not open file: %s\n", filePath);
-		return;
+		return NULL;
 	}
 	fseek(file, 0, SEEK_END);
 	const size_t length = ftell(file);
 	fseek(file, 0, SEEK_SET);
-	char buffer[length + 1];
+	char* buffer = malloc(length + 1);
 	if (buffer) {
 		fread(buffer, sizeof(char), length, file);
 		buffer[length] = '\0';
@@ -37,7 +37,7 @@ void cymrite_writeFile(const char* const filePath, const char* const data) {
 	fclose(file);
 }
 
-void cymrite_copyFile(const char* sourceFilePath, const char* destinationFilePath) {
+void cymrite_copyFile(const char* const sourceFilePath, const char* const destinationFilePath) {
 	FILE* const file1 = fopen(sourceFilePath, strcmp(strrchr(sourceFilePath, '.'), ".txt") ? "rb" : "r");
 	if (!file1) {
 		fprintf(stderr, "Could not open file: %s\n", sourceFilePath);
@@ -57,11 +57,11 @@ void cymrite_copyFile(const char* sourceFilePath, const char* destinationFilePat
 		buffer[length] = '\0';
 	}
 	fclose(file1);
-	fputs(buffer, file2)
+	fputs(buffer, file2);
 	fclose(file2);
 }
 
-const char* cymrite_getFileExtension(const char* const filePath) {
+char* cymrite_getFileExtension(const char* const filePath) {
 	return strrchr(filePath, '.') + 1;
 }
 

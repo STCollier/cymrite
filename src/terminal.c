@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -56,7 +57,7 @@ void cymrite_initializeTerminal(FILE* input, FILE* output) {
 void cymrite_terminateTerminal() {
 	fcntl(cymrite_terminalInputDescriptor, F_SETFL, cymrite_terminalInputBlockingStatus);
 	tcsetattr(cymrite_terminalInputDescriptor, TCSANOW, &cymrite_terminalInputCookedMode);
-	cymrite_resetTerminalInputStyles();
+	cymrite_resetTerminalStyles();
 }
 
 void cymrite_setTerminalInputBlocking(const bool value) {
@@ -150,14 +151,10 @@ void cymrite_clearTerminalLine() {
 	fprintf(cymrite_terminalOutput, "\x1B[2K");
 }
 
-void cymrite_clearTerminalScreen() {
-	fprintf(cymrite_terminalOutput, "\x1B[2J");
-}
-
 cymrite_TerminalPosition cymrite_getTerminalCursorPosition() {
 	const bool canonical = cymrite_terminalInputCanonical;
 	cymrite_setTerminalInputCanonical(false);
-	fprinf(cymrite_terminalOutput, "\x1B[6n");
+	fprintf(cymrite_terminalOutput, "\x1B[6n");
 	cymrite_TerminalPosition position;
 	fscanf(cymrite_terminalInput, "\x1B[%i;%iR", &position.row, &position.column);
 	cymrite_setTerminalInputCanonical(canonical);
@@ -190,7 +187,7 @@ void cymrite_setTerminalScreenAlternative(const bool value) {
 }
 
 cymrite_TerminalPosition cymrite_getTerminalScreenSize() {
-	winsize size;
+	struct winsize size;
 	ioctl(cymrite_terminalInputDescriptor, TIOCGWINSZ, &size);
 	return cymrite_TerminalPosition_create(size.ws_row, size.ws_col);
 }
@@ -235,6 +232,6 @@ void cymrite_backspaceTerminal(const size_t count) {
 	if (count) {
 		char spaces[count];
 		memset(spaces, ' ', count);
-		fprintf("\x1B[%iD%s\x1B[%iD", count, spaces, count);
+		fprintf(cymrite_terminalOutput, "\x1B[%iD%s\x1B[%iD", count, spaces, count);
 	}
 }

@@ -3,13 +3,13 @@
 Defined in header [<cymrite/filesystem.h>](../include/cymrite/filesystem.h)
 
 
-## `char* cymrite_getFileContent(const char* filename)`
+## `char* cymrite_getFileContent(const char* filePath)`
 
 #### Description:
 - Returns the complete file contents of a given file
 	
 #### Parameters:
-- `filename`: a char array, `const char* filename`, the filename to get the content from
+- `filePath`: a char array, `const char* filePath`, the filePath to get the content from
 
 #### Returns:
 - A string (char pointer)
@@ -27,37 +27,14 @@ Testing 123
 
 <br/>
 
-## `char* cymrite_getLineContent(const char* filename, int lineNumber)`
 
-#### Description:
-- Returns the contents of a file from a given line. Returns `NULL` if the selected line is out of range of the file
-
-#### Parameters:
-- `filename`: a char pointer, `const char* filename`, the filename to get the content from
-- `lineNumber`: an integer, `int lineNumber`, the selected line number to get the content from
-
-#### Returns:
-- A string (char pointer)
-
-### Example
-```c
-printf("%s", cymrite_getLineContent("foo.txt", 3));
-```
-Output:
-```
-Testing 123
-```
-
-<br/>
-
-
-## `void cymrite_writeToFile(const char* filename, char* data)`
+## `void cymrite_writeToFile(const char* filePath, const char* data)`
 
 #### Description:
 - Writes given data to selected file. All previous file contents will be overwritten
 
 #### Parameters:
-- `filename`: a char pointer, `const char* filename`, the filename to write the data to
+- `filePath`: a char pointer, `const char* filePath`, the filePath to write the data to
 - `data`: a char pointer, `char* data`, the data to write to the file
 
 #### Returns:
@@ -84,8 +61,8 @@ World
 - Copies the contents of one file over to another
 
 #### Parameters:
-- `srcFilename`: a char pointer, `const char* srcFilename`, the source filename to copy the contents from
-- `destFilename`: a char pointer, `const char* destFilename`, the destination filename to write the contents to
+- `srcFilename`: a char pointer, `const char* srcFilename`, the source filePath to copy the contents from
+- `destFilename`: a char pointer, `const char* destFilename`, the destination filePath to write the contents to
 
 #### Returns:
 - Void
@@ -106,13 +83,13 @@ Hello World!
 <br/>
 
 
-## `char* cymrite_getFileType(const char* filename)`
+## `char* cymrite_getFileType(const char* filePath)`
 
 #### Description:
 - Returns the file type of a given file
 
 #### Parameters:
-- `filename`: a char pointer, `const char* filename`, the filename to return the file type of
+- `filePath`: a char pointer, `const char* filePath`, the filePath to return the file type of
 
 #### Returns:
 - A string (char pointer)
@@ -139,13 +116,13 @@ txt
 <br/>
 
 
-## `int cymrite_getLineFromContent(const char* filename, char* data)`
+## `int cymrite_getLineFromContent(const char* filePath, char* data)`
 
 #### Description:
 - Returns the first found line number of a file based on a string. Returns `-1` if the string does not exist within the file 
 
 #### Parameters:
-- `filename`: a char pointer, `const char* filename`, the filename to search with the given data
+- `filePath`: a char pointer, `const char* filePath`, the filePath to search with the given data
 - `data`: a char pointer, `char* data`, the data to search the given file with
 
 #### Returns:
@@ -170,13 +147,13 @@ Line: 3
 <br/>
 
 
-## `void cymrite_deleteFile(const char* filename)`
+## `void cymrite_deleteFile(const char* filePath)`
 
 #### Description:
 - Deletes a given file if it exists
 
 #### Parameters:
-- `filename`: a char pointer, `const char* filename`, the filename to delete
+- `filePath`: a char pointer, `const char* filePath`, the filePath to delete
 
 #### Returns:
 - Void

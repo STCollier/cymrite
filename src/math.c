@@ -19,7 +19,9 @@ cymrite_Vector3 cymrite_Vector3_create(double x, double y, double z) {
 }
 
 double cymrite_clamp(const double value, const double limit1, const double limit2) {
-	return (value < fmin(limit1, limit2)) ? minimum : ((value > fmax(limit1, limit2)) ? maximum : value);
+	const double minimum = fmin(limit1, limit2);
+	const double maximum = fmax(limit1, limit2);
+	return (value < minimum) ? minimum : ((value > maximum) ? maximum : value);
 }
 
 bool cymrite_almostEqual(const double value1, const double value2) {

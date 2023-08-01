@@ -6,7 +6,7 @@ Defined in header [<cymrite/geometry.h>](../include/cymrite/geometry.h)
 ## `typedef struct cymrite_Vector2`
 
 #### Description:
-- A `typdef struct` for creating a 2 dimensional vector, storing a `x` and `y` component
+- A `typedef struct` for creating a 2 dimensional vector, storing a `x` and `y` component
 
 ### Synopsis
 ```c
@@ -22,7 +22,7 @@ typedef struct {
 ## `typedef struct cymrite_Vector2`
 
 #### Description:
-- A `typdef struct` for creating a 3 dimensional vector, storing a `x`, `y` and `z` component
+- A `typedef struct` for creating a 3 dimensional vector, storing a `x`, `y` and `z` component
 
 ### Synopsis
 ```c
@@ -39,7 +39,7 @@ typedef struct {
 ## `typedef struct cymrite_Point`
 
 #### Description:
-- A `typdef struct` for creating a point in 2D space
+- A `typedef struct` for creating a point in 2D space
 
 ### Synopsis
 ```c
@@ -55,7 +55,7 @@ typedef struct {
 ## `typedef struct cymrite_Line`
 
 #### Description:
-- A `typdef struct` for creating a line segment in 2D space
+- A `typedef struct` for creating a line segment in 2D space
 
 ### Synopsis
 ```c
@@ -73,7 +73,7 @@ typedef struct {
 ## `typedef struct cymrite_Circle`
 
 #### Description:
-- A `typdef struct` for creating a circle in 2D space
+- A `typedef struct` for creating a circle in 2D space
 
 ### Synopsis
 ```c
@@ -90,7 +90,7 @@ typedef struct {
 ## `typedef struct cymrite_Rectangle`
 
 #### Description:
-- A `typdef struct` for creating a rectangle in 2D space
+- A `typedef struct` for creating a rectangle in 2D space
 
 ### Synopsis
 ```c
