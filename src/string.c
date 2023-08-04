@@ -19,7 +19,7 @@ int cymrite_countStringTokens(const char* string) {
 	return count;
 }
 
-int cymrite_countStringCharacter(const char* string, const char character) {
+int cymrite_countStringCharacters(const char* string, const char character) {
 	int count = 0;
 
 	for (size_t i = strlen(string); i--;) {
@@ -29,46 +29,40 @@ int cymrite_countStringCharacter(const char* string, const char character) {
 	return count;
 }
 
-char* cymrite_uppercaseString(const char* string) {
-	char* result = NULL;
+void cymrite_uppercase(const char* string, char* result) {
 	strcpy(result, string);
+
 	for (size_t i = strlen(result); i--;) {
 		result[i] = toupper(result[i]);
 	}
-	return result;
 }
 
-char* cymrite_lowercaseString(const char* string) {
-	char* result = NULL;
+void cymrite_lowercase(const char* string, char* result) {
 	strcpy(result, string);
+
 	for (size_t i = strlen(result); i--;) {
 		result[i] = tolower(result[i]);
 	}
-	return result;
 }
 
-char* cymrite_repeatString(const char* string, size_t count) {
-	char* result = NULL;
+void cymrite_repeatString(const char* string, char* result, size_t count) {
 	while (count--) {
 		strcat(result, string);
 	}
-	return result;
 }
 
-char* cymrite_trimStringFront(const char* string, const char* characters) {
+void cymrite_trimStringFront(const char* string, char* result, const char* characters) {
 	const size_t stringSize = strlen(string);
 	size_t index = 0;
 
 	while ((index < stringSize) && (strchr(characters, string[index]) != NULL)) {
 		++index;
 	}
-	char* result = NULL;
+
 	strcpy(result, string + index);
-	return result;
 }
 
-char* cymrite_trimStringBack(const char* string, const char* characters) {
-	char* result = NULL;
+void cymrite_trimStringBack(const char* string, char* result, const char* characters) {
 	strcpy(result, string);
 	size_t index = strlen(string);
 
@@ -77,14 +71,11 @@ char* cymrite_trimStringBack(const char* string, const char* characters) {
 	}
 
 	result[index + 1] = 0;
-	return result;
 }
 
-char* cymrite_truncateString(const char* string, const size_t length, const char* suffix) {
+void cymrite_truncateString(const char* string, char* result, const size_t length, const char* suffix) {
 	const size_t stringSize = strlen(string);
 	const size_t suffixSize = strlen(suffix);
-
-	char* result = NULL;
 
 	if (stringSize > length) {
 		if (suffixSize > length) {
@@ -96,6 +87,4 @@ char* cymrite_truncateString(const char* string, const size_t length, const char
 			strcat(result, suffix);
 		}
 	}
-
-	return result;
 }

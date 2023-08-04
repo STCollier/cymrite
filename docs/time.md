@@ -49,20 +49,20 @@ The current month is 5
 <br/>
 
 
-## `int cymrite_getHour(int format)`
+## `int cymrite_getHour()`
 
 #### Description:
-- Returns the current hour in either 12 or 24 hour format
+- Returns the current hour
 
 #### Parameters:
-- `format`: an integer `int format` to specify 12 or 24 hour time. If the integer `12` is specified, time will default to 12 hours and any other integer will default to 24 hour time. 
+- None
 
 #### Returns:
 - An integer
 
 ### Example
 ```c
-printf("It is %d o'clock\n", cymrite_getHour(12)); // 12 hour format
+printf("It is %d o'clock\n", cymrite_getHour());
 ```
 Output:
 ```
@@ -195,7 +195,7 @@ The current month is May
 - None
 
 #### Returns:
-- A boolean true (1) or false (0)
+- A boolean
 
 ### Example
 ```c

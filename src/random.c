@@ -1,10 +1,15 @@
 #include <stdlib.h>
+#include <time.h>
 #include "../include/cymrite/random.h"
 
-void cymrite_seedRandom(const int seed) {
+void cymrite_setSeed(const int seed) {
 	srand(seed);
 }
 
-double cymrite_getRandom(const double minimum, const double maximum) {
-	return (double)rand() / RAND_MAX * (maximum - minimum + 1) + minimum;
+void cymrite_setRandomSeed() {
+	srand(time(NULL));
+}
+
+int cymrite_getRandom(const int minimum, const int maximum) {
+	return rand() % (maximum + 1 - minimum) + minimum;
 }

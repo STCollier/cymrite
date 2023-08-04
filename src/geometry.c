@@ -3,14 +3,7 @@
 #include "../include/cymrite/geometry.h"
 #include "../include/cymrite/math.h"
 
-cymrite_Point cymrite_Point_create(const double x, const double y) {
-	cymrite_Point point;
-	point.x = x;
-	point.y = y;
-	return point;
-}
-
-bool cymrite_Point_compare(const cymrite_Point point1, const cymrite_Point point2) {
+static bool cymrite_Point_compare(const cymrite_Point point1, const cymrite_Point point2) {
 	return cymrite_almostEqual(point1.x, point2.x) && cymrite_almostEqual(point1.y, point2.y);
 }
 
@@ -23,37 +16,30 @@ bool cymrite_Point_collisionPoint(const cymrite_Point point1, const cymrite_Poin
 }
 
 bool cymrite_Point_collisionLine(const cymrite_Point point, const cymrite_Line line) {
-	return cymrite_almostEqual(cymrite_Point_distance(point, line.start) + cymrite_Point_distance(point, line.end), cymrite_Line_length(line));
+	return cymrite_almostEqual(cymrite_Point_distance(point, (cymrite_Point){line.x1, line.y1}) + cymrite_Point_distance(point, (cymrite_Point){line.x2, line.y2}), cymrite_Line_length(line));
 }
 
 bool cymrite_Point_collisionCircle(cymrite_Point point, cymrite_Circle circle) {
-	return (cymrite_Point_distance(point, circle.center) <= circle.radius);
+	return (cymrite_Point_distance(point, (cymrite_Point){circle.x, circle.y}) <= circle.radius);
 }
 
 bool cymrite_Point_collisionRectangle(cymrite_Point point, cymrite_Rectangle rectangle) {
-	return ((point.x >= rectangle.position.x)
-			&& (point.x <= rectangle.position.x + rectangle.size.x)
-			|| (point.x <= rectangle.position.x)
-			&& (point.x >= rectangle.position.x + rectangle.size.x))
-		&& ((point.y >= rectangle.position.y)
-			&& (point.y <= rectangle.position.y + rectangle.size.y)
-			|| (point.y <= rectangle.position.y)
-			&& (point.y >= rectangle.position.y + rectangle.size.y));
-}
-
-cymrite_Line cymrite_Line_create(const cymrite_Point start, const cymrite_Point end) {
-	cymrite_Line line;
-	line.start = start;
-	line.end = end;
-	return line;
+	return ((point.x >= rectangle.x)
+			&& ((point.x <= rectangle.x + rectangle.width)
+			|| ((point.x <= rectangle.x)
+			&& (point.x >= rectangle.x + rectangle.width)))
+		&& (((point.y >= rectangle.y)
+			&& ((point.y <= rectangle.y + rectangle.height)))
+			|| ((point.y <= rectangle.y)
+			&& (point.y >= rectangle.y + rectangle.height))));
 }
 
 bool cymrite_Line_compare(const cymrite_Line line1, const cymrite_Line line2) {
-	return cymrite_Point_compare(line1.start, line2.start) && cymrite_Point_compare(line1.end, line2.end) || cymrite_Point_compare(line1.end, line2.start) && cymrite_Point_compare(line1.start, line2.end);
+	return (cymrite_Point_compare((cymrite_Point){line1.x1, line1.y1}, (cymrite_Point){line2.x1, line2.y1}) && cymrite_Point_compare((cymrite_Point){line1.x2, line1.y2}, (cymrite_Point){line2.x2, line2.y2})) || (cymrite_Point_compare((cymrite_Point){line1.x2, line1.y2}, (cymrite_Point){line2.x1, line2.y1}) && cymrite_Point_compare((cymrite_Point){line1.x1, line1.y1}, (cymrite_Point){line2.x2, line2.y2}));
 }
 
 double cymrite_Line_length(const cymrite_Line line) {
-	return cymrite_Point_distance(line.start, line.end);
+	return cymrite_Point_distance((cymrite_Point){line.x1, line.y1}, (cymrite_Point){line.x2, line.y2});
 }
 
 bool cymrite_Line_collisionPoint(const cymrite_Line line, const cymrite_Point point) {
@@ -62,42 +48,35 @@ bool cymrite_Line_collisionPoint(const cymrite_Line line, const cymrite_Point po
 
 bool cymrite_Line_collisionLine(cymrite_Line line1, cymrite_Line line2) {
 	// not even going to touch this
-	double uA = ((line2.end.x-line2.start.x)*(line1.start.y-line2.start.y) - (line2.end.y-line2.start.y)*(line1.start.x-line2.start.x)) / ((line2.end.y-line2.start.y)*(line1.end.x-line1.start.x) - (line2.end.x-line2.start.x)*(line1.end.y-line1.start.y));
-	double uB = ((line1.end.x-line1.start.x)*(line1.start.y-line2.start.y) - (line1.end.y-line1.start.y)*(line1.start.x-line2.start.x)) / ((line2.end.y-line2.start.y)*(line1.end.x-line1.start.x) - (line2.end.x-line2.start.x)*(line1.end.y-line1.start.y));
+	double uA = ((line2.x2-line2.x1)*(line1.y1-line2.y1) - (line2.y2-line2.y1)*(line1.x1-line2.x1)) / ((line2.y2-line2.y1)*(line1.x2-line1.x1) - (line2.x2-line2.x1)*(line1.y2-line1.y1));
+	double uB = ((line1.x2-line1.x1)*(line1.y1-line2.y1) - (line1.y2-line1.y1)*(line1.x1-line2.x1)) / ((line2.y2-line2.y1)*(line1.x2-line1.x1) - (line2.x2-line2.x1)*(line1.y2-line1.y1));
 	return (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1);
 }
 
 bool cymrite_Line_collisionCircle(const cymrite_Line line, const cymrite_Circle circle) {	
-	if (cymrite_Point_collisionCircle(line.start, circle) || cymrite_Point_collisionCircle(line.end, circle)) {
+	if (cymrite_Point_collisionCircle((cymrite_Point){line.x1, line.y1}, circle) || cymrite_Point_collisionCircle((cymrite_Point){line.x2, line.y2}, circle)) {
 		return true;
 	}
 	double lineLength = cymrite_Line_length(line);
-	double dot = (((circle.center.x - line.start.x) * (line.end.x-line.start.x)) + ((circle.center.y-line.start.y) * (line.end.y-line.start.y))) / (lineLength * lineLength);
-	double closestX = line.start.x + (dot * (line.end.x - line.start.x));
-	double closestY = line.start.y + (dot * (line.end.y - line.start.y));
-	return cymrite_Line_collisionPoint(line, cymrite_Point_create(closestX, closestY)) && (cymrite_Point_distance(cymrite_Point_create(closestX, circle.center.x), cymrite_Point_create(closestY, circle.center.y)) <= circle.radius);
+	double dot = (((circle.x - line.x1) * (line.x2-line.x1)) + ((circle.y-line.y1) * (line.y2-line.y1))) / (lineLength * lineLength);
+	double closestX = line.x1 + (dot * (line.x2 - line.x1));
+	double closestY = line.y1 + (dot * (line.y2 - line.y1));
+	return cymrite_Line_collisionPoint(line, (cymrite_Point){closestX, closestY}) && (cymrite_Point_distance((cymrite_Point){closestX, circle.x}, (cymrite_Point){closestY, circle.y}) <= circle.radius);
 }
 
 bool cymrite_Line_collisionRectangle(const cymrite_Line line, const cymrite_Rectangle rectangle) {
-	const cymrite_Point point1 = rectangle.position;
-	const cymrite_Point point2 = cymrite_Point_create(rectangle.position.x + rectangle.size.x, rectangle.position.y);
-	const cymrite_Point point3 = cymrite_Point_create(rectangle.position.x + rectangle.size.x, rectangle.position.y + rectangle.size.y);
-	const cymrite_Point point4 = cymrite_Point_create(rectangle.position.x, rectangle.position.y + rectangle.size.y);
-	return cymrite_Line_collisionLine(line, cymrite_Line_create(point1, point2))
-		|| cymrite_Line_collisionLine(line, cymrite_Line_create(point2, point3))
-		|| cymrite_Line_collisionLine(line, cymrite_Line_create(point3, point4))
-		|| cymrite_Line_collisionLine(line, cymrite_Line_create(point4, point1));
-}
-
-cymrite_Circle cymrite_Circle_create(const cymrite_Point center, const double radius) {
-	cymrite_Circle circle;
-	circle.center = center;
-	circle.radius = radius;
-	return circle;
+	const cymrite_Point point1 = {rectangle.x, rectangle.y};
+	const cymrite_Point point2 = {rectangle.x + rectangle.width, rectangle.y};
+	const cymrite_Point point3 = {rectangle.x + rectangle.width, rectangle.y + rectangle.height};
+	const cymrite_Point point4 = {rectangle.x, rectangle.y + rectangle.height};
+	return cymrite_Line_collisionLine(line, (cymrite_Line){point1.x, point1.y, point2.x, point2.y})
+		|| cymrite_Line_collisionLine(line, (cymrite_Line){point2.x, point2.y, point3.x, point3.y})
+		|| cymrite_Line_collisionLine(line, (cymrite_Line){point3.x, point3.y, point4.x, point4.y})
+		|| cymrite_Line_collisionLine(line, (cymrite_Line){point4.x, point4.y, point1.x, point1.y});
 }
 
 bool cymrite_Circle_compare(const cymrite_Circle circle1, const cymrite_Circle circle2) {
-	return cymrite_Point_compare(circle1.center, circle2.center) && cymrite_almostEqual(circle1.radius, circle2.radius);
+	return cymrite_Point_compare((cymrite_Point){circle1.x, circle1.y}, (cymrite_Point){circle2.x, circle2.y}) && cymrite_almostEqual(circle1.radius, circle2.radius);
 }
 
 double cymrite_Circle_area(const cymrite_Circle circle) {
@@ -117,73 +96,66 @@ bool cymrite_Circle_collisionLine(const cymrite_Circle circle, const cymrite_Lin
 }
 
 bool cymrite_Circle_collisionCircle(const cymrite_Circle circle1, const cymrite_Circle circle2) {
-	return (cymrite_Point_distance(circle1.center, circle2.center) <= circle1.radius + circle2.radius);
+	return (cymrite_Point_distance((cymrite_Point){circle1.x, circle1.y}, (cymrite_Point){circle2.x, circle2.y}) <= circle1.radius + circle2.radius);
 }
 
 bool cymrite_Circle_collisionRectangle(const cymrite_Circle circle, const cymrite_Rectangle rectangle) {
-	return cymrite_Point_collisionCircle(cymrite_Point_create(cymrite_clamp(circle.center.x, rectangle.position.x, rectangle.position.x + rectangle.size.x), cymrite_clamp(circle.center.y, rectangle.position.y, rectangle.position.y + rectangle.size.y)), circle);
-}
-
-cymrite_Rectangle cymrite_Rectangle_create(const cymrite_Point position, const cymrite_Vector2 size) {
-	cymrite_Rectangle rectangle;
-	rectangle.position = position;
-	rectangle.size = size;
-	return rectangle;
+	return cymrite_Point_collisionCircle((cymrite_Point){cymrite_clamp(circle.x, rectangle.x, rectangle.x + rectangle.width), cymrite_clamp(circle.y, rectangle.y, rectangle.y + rectangle.height)}, circle);
 }
 
 bool cymrite_Rectangle_compare(const cymrite_Rectangle rectangle1, const cymrite_Rectangle rectangle2) {
-	// too lazy to implement algorithm so raw logic it is!
-	const cymrite_Point point1 = rectangle1.position;
-	const cymrite_Point point2 = cymrite_Point_create(rectangle1.position.x + rectangle1.size.x, rectangle1.position.y);
-	const cymrite_Point point3 = cymrite_Point_create(rectangle1.position.x + rectangle1.size.x, rectangle1.position.y + rectangle1.size.y);
-	const cymrite_Point point4 = cymrite_Point_create(rectangle1.position.x, rectangle1.position.y + rectangle1.size.y);
-	const cymrite_Point point5 = rectangle2.position;
-	const cymrite_Point point6 = cymrite_Point_create(rectangle2.position.x + rectangle2.size.x, rectangle2.position.y);
-	const cymrite_Point point7 = cymrite_Point_create(rectangle2.position.x + rectangle2.size.x, rectangle2.position.y + rectangle2.size.y);
-	const cymrite_Point point8 = cymrite_Point_create(rectangle2.position.x, rectangle2.position.y + rectangle2.size.y);
-	return cymrite_Point_compare(point1, point5)
+	// Raw logic monstrosity (Credit: Eczbek)
+	const cymrite_Point point1 = {rectangle1.x, rectangle1.y};
+	const cymrite_Point point2 = {rectangle1.x + rectangle1.width, rectangle1.y};
+	const cymrite_Point point3 = {rectangle1.x + rectangle1.width, rectangle1.y + rectangle1.height};
+	const cymrite_Point point4 = {rectangle1.x, rectangle1.y + rectangle1.height};
+	const cymrite_Point point5 = {rectangle2.x, rectangle2.y};
+	const cymrite_Point point6 = {rectangle2.x + rectangle2.width, rectangle2.y};
+	const cymrite_Point point7 = {rectangle2.x + rectangle2.width, rectangle2.y + rectangle2.height};
+	const cymrite_Point point8 = {rectangle2.x, rectangle2.y + rectangle2.height};
+	return (cymrite_Point_compare(point1, point5)
 		&& cymrite_Point_compare(point2, point6)
 		&& cymrite_Point_compare(point3, point7)
-		&& cymrite_Point_compare(point4, point8)
-		|| cymrite_Point_compare(point2, point5)
+		&& cymrite_Point_compare(point4, point8))
+		|| (cymrite_Point_compare(point2, point5)
 		&& cymrite_Point_compare(point3, point6)
 		&& cymrite_Point_compare(point4, point7)
-		&& cymrite_Point_compare(point1, point8)
-		|| cymrite_Point_compare(point3, point5)
+		&& cymrite_Point_compare(point1, point8))
+		|| (cymrite_Point_compare(point3, point5)
 		&& cymrite_Point_compare(point4, point6)
 		&& cymrite_Point_compare(point1, point7)
-		&& cymrite_Point_compare(point2, point8)
-		|| cymrite_Point_compare(point4, point5)
+		&& cymrite_Point_compare(point2, point8))
+		|| (cymrite_Point_compare(point4, point5)
 		&& cymrite_Point_compare(point1, point6)
 		&& cymrite_Point_compare(point2, point7)
-		&& cymrite_Point_compare(point3, point8)
-		|| cymrite_Point_compare(point4, point5)
+		&& cymrite_Point_compare(point3, point8))
+		|| (cymrite_Point_compare(point4, point5)
 		&& cymrite_Point_compare(point3, point6)
 		&& cymrite_Point_compare(point2, point7)
-		&& cymrite_Point_compare(point1, point8)
-		|| cymrite_Point_compare(point3, point5)
+		&& cymrite_Point_compare(point1, point8))
+		|| (cymrite_Point_compare(point3, point5)
 		&& cymrite_Point_compare(point2, point6)
 		&& cymrite_Point_compare(point1, point7)
-		&& cymrite_Point_compare(point4, point8)
-		|| cymrite_Point_compare(point2, point5)
+		&& cymrite_Point_compare(point4, point8))
+		|| (cymrite_Point_compare(point2, point5)
 		&& cymrite_Point_compare(point1, point6)
 		&& cymrite_Point_compare(point4, point7)
-		&& cymrite_Point_compare(point3, point8)
-		|| cymrite_Point_compare(point1, point5)
+		&& cymrite_Point_compare(point3, point8))
+		|| (cymrite_Point_compare(point1, point5)
 		&& cymrite_Point_compare(point4, point6)
 		&& cymrite_Point_compare(point3, point7)
-		&& cymrite_Point_compare(point2, point8);
+		&& cymrite_Point_compare(point2, point8));
 }
 
 double cymrite_Rectangle_area(const cymrite_Rectangle rectangle) {
-	return rectangle.size.x * rectangle.size.y;
+	return rectangle.width * rectangle.height;
 }
 
 double cymrite_Rectangle_perimeter(const cymrite_Rectangle rectangle) {
-	const cymrite_Point point1 = rectangle.position;
-	const cymrite_Point point2 = cymrite_Point_create(rectangle.position.x + rectangle.size.x, rectangle.position.y);
-	const cymrite_Point point3 = cymrite_Point_create(rectangle.position.x + rectangle.size.x, rectangle.position.y + rectangle.size.y);
-	const cymrite_Point point4 = cymrite_Point_create(rectangle.position.x, rectangle.position.y + rectangle.size.y);
+	const cymrite_Point point1 = {rectangle.x, rectangle.y};
+	const cymrite_Point point2 = {rectangle.x + rectangle.width, rectangle.y};
+	const cymrite_Point point3 = {rectangle.x + rectangle.width, rectangle.y + rectangle.height};
+	const cymrite_Point point4 = {rectangle.x, rectangle.y + rectangle.height};
 	return cymrite_Point_distance(point1, point2)
 		+ cymrite_Point_distance(point2, point3)
 		+ cymrite_Point_distance(point3, point4)
@@ -203,22 +175,22 @@ bool cymrite_Rectangle_collisionCircle(const cymrite_Rectangle rectangle, const 
 }
 
 bool cymrite_Rectangle_collisionRectangle(cymrite_Rectangle rectangle1, cymrite_Rectangle rectangle2) {
-	const cymrite_Point point1 = rectangle1.position;
-	const cymrite_Point point2 = cymrite_Point_create(rectangle1.position.x + rectangle1.size.x, rectangle1.position.y);
-	const cymrite_Point point3 = cymrite_Point_create(rectangle1.position.x + rectangle1.size.x, rectangle1.position.y + rectangle1.size.y);
-	const cymrite_Point point4 = cymrite_Point_create(rectangle1.position.x, rectangle1.position.y + rectangle1.size.y);
-	const cymrite_Point point5 = rectangle2.position;
-	const cymrite_Point point6 = cymrite_Point_create(rectangle2.position.x + rectangle2.size.x, rectangle2.position.y);
-	const cymrite_Point point7 = cymrite_Point_create(rectangle2.position.x + rectangle2.size.x, rectangle2.position.y + rectangle2.size.y);
-	const cymrite_Point point8 = cymrite_Point_create(rectangle2.position.x, rectangle2.position.y + rectangle2.size.y);
-	const cymrite_Line line1 = cymrite_Line_create(point1, point2);
-	const cymrite_Line line2 = cymrite_Line_create(point2, point3);
-	const cymrite_Line line3 = cymrite_Line_create(point3, point4);
-	const cymrite_Line line4 = cymrite_Line_create(point4, point1);
-	const cymrite_Line line5 = cymrite_Line_create(point5, point6);
-	const cymrite_Line line6 = cymrite_Line_create(point6, point7);
-	const cymrite_Line line7 = cymrite_Line_create(point7, point8);
-	const cymrite_Line line8 = cymrite_Line_create(point8, point1);
+	const cymrite_Point point1 = {rectangle1.x, rectangle1.y};
+	const cymrite_Point point2 = {rectangle1.x + rectangle1.width, rectangle1.y};
+	const cymrite_Point point3 = {rectangle1.x + rectangle1.width, rectangle1.y + rectangle1.height};
+	const cymrite_Point point4 = {rectangle1.x, rectangle1.y + rectangle1.height};
+	const cymrite_Point point5 = {rectangle2.x, rectangle2.y};
+	const cymrite_Point point6 = {rectangle2.x + rectangle2.width, rectangle2.y};
+	const cymrite_Point point7 = {rectangle2.x + rectangle2.width, rectangle2.y + rectangle2.height};
+	const cymrite_Point point8 = {rectangle2.x, rectangle2.y + rectangle2.height};
+	const cymrite_Line line1 = {point1.x, point1.y, point2.x, point2.y};
+	const cymrite_Line line2 = {point2.x, point2.y, point3.x, point3.y};
+	const cymrite_Line line3 = {point3.x, point3.y, point4.x, point4.y};
+	const cymrite_Line line4 = {point4.x, point4.y, point1.x, point1.y};
+	const cymrite_Line line5 = {point5.x, point5.y, point6.x, point6.y};
+	const cymrite_Line line6 = {point6.x, point6.y, point7.x, point7.y};
+	const cymrite_Line line7 = {point7.x, point7.y, point8.x, point8.y};
+	const cymrite_Line line8 = {point8.x, point8.y, point1.x, point1.y};
 	return cymrite_Line_collisionLine(line1, line5)
 		|| cymrite_Line_collisionLine(line2, line5)
 		|| cymrite_Line_collisionLine(line3, line5)

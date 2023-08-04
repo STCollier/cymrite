@@ -101,5 +101,5 @@ char* cymrite_getMonthStr() {
 
 bool cymrite_isLeapYear() {
 	const int year = cymrite_getYear();
-	return !(year % 4) && (year % 100) || !(year % 400);
+	return !((year % 4) && (year % 100)) || !(year % 400);
 }

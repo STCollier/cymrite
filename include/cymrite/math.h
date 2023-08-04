@@ -6,6 +6,8 @@
 
 #	define CYMRITE_PI acos(-1)
 #	define CYMRITE_TAU (CYMRITE_PI * 2)
+#	define CYMRITE_MIN(a, b) (((a) < (b)) ? (a) : (b))
+#	define CYMRITE_MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 typedef struct {
 	double x;
@@ -17,10 +19,6 @@ typedef struct {
 	double y;
 	double z;
 } cymrite_Vector3;
-
-cymrite_Vector2 cymrite_Vector2_create(double x, double y);
-
-cymrite_Vector3 cymrite_Vector3_create(double x, double y, double z);
 
 double cymrite_clamp(double value, double minimum, double maximum);
 

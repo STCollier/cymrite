@@ -72,15 +72,15 @@ void cymrite_deleteFile(const char* const filePath) {
 }
 
 void cymrite_createDirectory(const char* const directoryPath) {
-	struct stat st = { 0 }; // ???
+	struct stat st = { 0 };
 	if (stat(directoryPath, &st) != -1) {
 		fprintf(stderr, "Creating directory with this name will result in an overwrite\n");
 	}
-	mkdir(directoryPath, 0700); // ???
+	mkdir(directoryPath, 0700);
 }
 
 void cymrite_removeDirectory(const char* const directoryPath) {
-	struct stat st = { 0 }; // ???
+	struct stat st = { 0 };
 	if (stat(directoryPath, &st) == -1) {
 		fprintf(stderr, "Could not delete directory: %s\n", directoryPath);
 		return;

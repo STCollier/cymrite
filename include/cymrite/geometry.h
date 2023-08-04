@@ -7,23 +7,24 @@
 typedef cymrite_Vector2 cymrite_Point;
 
 typedef struct {
-	cymrite_Point start;
-	cymrite_Point end;
+	double x1;
+	double y1;
+	double x2;
+	double y2;
 } cymrite_Line;
 
 typedef struct {
-	cymrite_Point center;
+	double x;
+	double y;
 	double radius;
 } cymrite_Circle;
 
 typedef struct {
-	cymrite_Point position;
-	cymrite_Vector2 size;
+	double x;
+	double y;
+	double width;
+	double height;
 } cymrite_Rectangle;
-
-cymrite_Point cymrite_Point_create(double x, double y);
-
-bool cymrite_Point_compare(cymrite_Point point1, cymrite_Point point2);
 
 double cymrite_Point_distance(cymrite_Point point1, cymrite_Point point2);
 
@@ -34,8 +35,6 @@ bool cymrite_Point_collisionLine(cymrite_Point point, cymrite_Line line);
 bool cymrite_Point_collisionCircle(cymrite_Point point, cymrite_Circle circle);
 
 bool cymrite_Point_collisionRectangle(cymrite_Point point, cymrite_Rectangle rectangle);
-
-cymrite_Line cymrite_Line_create(cymrite_Point start, cymrite_Point end);
 
 bool cymrite_Line_compare(cymrite_Line line1, cymrite_Line line2);
 
@@ -48,8 +47,6 @@ bool cymrite_Line_collisionLine(cymrite_Line line1, cymrite_Line line2);
 bool cymrite_Line_collisionCircle(cymrite_Line line, cymrite_Circle circle);
 
 bool cymrite_Line_collisionRectangle(cymrite_Line line, cymrite_Rectangle rectangle);
-
-cymrite_Circle cymrite_Circle_create(cymrite_Point center, double radius);
 
 bool cymrite_Circle_compare(cymrite_Circle circle1, cymrite_Circle circle2);
 
@@ -64,8 +61,6 @@ bool cymrite_Circle_collisionLine(cymrite_Circle circle, cymrite_Line line);
 bool cymrite_Circle_collisionCircle(cymrite_Circle circle1, cymrite_Circle circle2);
 
 bool cymrite_Circle_collisionRectangle(cymrite_Circle circle, cymrite_Rectangle rectangle);
-
-cymrite_Rectangle cymrite_Rectangle_create(cymrite_Point position, cymrite_Vector2 size);
 
 bool cymrite_Rectangle_compare(cymrite_Rectangle rectangle1, cymrite_Rectangle rectangle2);
 

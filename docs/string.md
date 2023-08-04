@@ -3,7 +3,7 @@
 Defined in header [<cymrite/string.h>](../include/cymrite/string.h)
 
 
-## `int cymrite_countTokens(const char* string)`
+## `int cymrite_countStringTokens(const char* string)`
 
 #### Description:
 - Returns the number of words from a given string.
@@ -18,7 +18,7 @@ Defined in header [<cymrite/string.h>](../include/cymrite/string.h)
 ```c
 char str[] = "Hello, this is a test string!";
 
-printf("%d\n", cymrite_countTokens(str));
+printf("%d\n", cymrite_countStringTokens(str));
 ```
 Output:
 ```
@@ -27,7 +27,7 @@ Output:
 
 <br/>
 
-## `int cymrite_countChar(const char* string, const char character)`
+## `int cymrite_countStringCharacters(const char* string, const char character)`
 
 #### Description:
 - Returns the number of a given character from a given string, case sensitive.
@@ -54,7 +54,7 @@ Output:
 <br/>
 
 
-## `void cymrite_upper(const char* string, char* result)`
+## `void cymrite_uppercase(const char* string, char* result)`
 
 #### Description:
 - Converts all the letters of a string to uppercase
@@ -71,7 +71,7 @@ Output:
 char str[] = "Hello World!";
 char* newStr = malloc(strlen(str)); //Using a dynamically allocated pointer
 
-cymrite_upper(str, newStr);
+cymrite_uppercase(str, newStr);
 
 printf("%s\n", newStr);
 
@@ -85,7 +85,7 @@ HELLO WORLD!
 <br/>
 
 
-## `void cymrite_lower(const char* string, char* result)`
+## `void cymrite_lowercase(const char* string, char* result)`
 
 #### Description:
 - Converts all the letters of a string to lowercase
@@ -102,7 +102,7 @@ HELLO WORLD!
 char str[] = "HELLO WORLD!";
 char* newStr = malloc(strlen(str)); //Using a dynamically allocated pointer
 
-cymrite_lower(str, newStr);
+cymrite_lowercase(str, newStr);
 
 printf("%s\n", newStr);
 
@@ -116,7 +116,7 @@ hello world!
 <br/>
 
 
-## `void cymrite_repeatStr(const char* string, char* result, size_t count)`
+## `void cymrite_repeatString(const char* string, char* result, size_t count)`
 
 #### Description:
 - Repeats a given string a set amount of times
@@ -134,7 +134,7 @@ hello world!
 char str[] = "Hello World!\n";
 char result[128];
 
-cymrite_repeatStr(str, result, 3);
+cymrite_repeatString(str, result, 3);
 
 printf("%s", result);
 ```
@@ -148,7 +148,7 @@ Hello World!
 <br/>
 
 
-## `void cymrite_trimFront(const char* string, char* result, const char* characters)`
+## `void cymrite_trimStringFront(const char* string, char* result, const char* characters)`
 
 #### Description:
 - Trims given characters from a string from the front
@@ -166,7 +166,7 @@ Hello World!
 char str[] = "Hello World!";
 char result[64];
 
-cymrite_trimFront(str, result, "Hello ");
+cymrite_trimStringFront(str, result, "Hello ");
 
 printf("%s\n", result);
 ```
@@ -178,7 +178,7 @@ World!
 <br/>
 
 
-## `cymrite_trimBack(const char* string, char* result, const char* characters)`
+## `cymrite_trimStringBack(const char* string, char* result, const char* characters)`
 
 #### Description:
 - Trims given characters from a string from the back
@@ -208,7 +208,7 @@ Hello
 <br/>
 
 
-## `void cymrite_truncateStr(const char* string, char* result, size_t length, const char* suffix)`
+## `void cymrite_truncateString(const char* string, char* result, size_t length, const char* suffix)`
 
 #### Description:
 - Truncates a string to a given length and appends a suffix to the end
@@ -227,7 +227,7 @@ Hello
 char str[] = "Hello World!";
 char result[64];
 
-cymrite_truncateStr(str, result, 7, "...");
+cymrite_truncateString(str, result, 7, "...");
 
 printf("%s\n", result);
 ```
@@ -239,14 +239,12 @@ Hello...
 <br/>
 
 
-## `char* cymrite_whitespace`
+## `CYMRITE_WHITESPACE`
 
 #### Description:
-- A string containing whitespace characters
+- A macro containing whitespace characters
 
 ### Synopsis
 ```c
-char* cymrite_whitespace = "\x9\xa\xb\xc\xd\x20\x85\xa0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202F\u205f\u3000";
+#define CYMRITE_WHITESPACE "\x9\xA\xB\xC\xD\x20\x85\xA0"
 ```
-
-<br/>

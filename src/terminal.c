@@ -232,6 +232,6 @@ void cymrite_backspaceTerminal(const size_t count) {
 	if (count) {
 		char spaces[count];
 		memset(spaces, ' ', count);
-		fprintf(cymrite_terminalOutput, "\x1B[%iD%s\x1B[%iD", count, spaces, count);
+		fprintf(cymrite_terminalOutput, "\x1B[%liD%s\x1B[%liD", count, spaces, count);
 	}
 }
