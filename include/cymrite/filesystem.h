@@ -3,18 +3,27 @@
 
 #	include <stddef.h>
 
-char* cymrite_readFile(const char* filePath);
+typedef struct {
+	size_t size;
+	char* data;
+} cymrite_Buffer;
 
-void cymrite_writeFile(const char* filePath, const char* data);
+FILE* cymrite_openFile(const char* path, const char* mode);
 
-void cymrite_copyFile(const char* sourceFilePath, const char* destinationFilePath);
+void cymrite_closeFile(FILE* file);
 
-char* cymrite_getFileExtension(const char* filePath);
+char* cymrite_readFile(const char* path);
 
-void cymrite_deleteFile(const char* filePath);
+void cymrite_writeFile(const char* path, const char* data);
 
-void cymrite_createDirectory(const char* directoryPath);
+void cymrite_copyFile(const char* sourcePath, const char* destinationPath);
 
-void cymrite_deleteDirectory(const char* directoryPath);
+char* cymrite_getFileExtension(const char* path);
+
+void cymrite_deleteFile(const char* path);
+
+void cymrite_createDirectory(const char* path);
+
+void cymrite_deleteDirectory(const char* path);
 
 #endif

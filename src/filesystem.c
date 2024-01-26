@@ -1,89 +1,97 @@
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include "../include/cymrite/filesystem.h"
 
-char* cymrite_readFile(const char* const filePath) {
-	FILE* const file = fopen(filePath, strcmp(strrchr(filePath, '.'), ".txt") ? "rb" : "r");
+FILE* cymrite_openFile(const char* const path, const char* const mode) {
+	FILE* const file = fopen(path, mode);
 	if (!file) {
-		fprintf(stderr, "Could not open file: %s\n", filePath);
-		return NULL;
+		fprintf(stderr, "Failed to open file: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
-	fseek(file, 0, SEEK_END);
-	const size_t length = ftell(file);
-	fseek(file, 0, SEEK_SET);
-	char* buffer = malloc(length + 1);
-	if (buffer) {
-		fread(buffer, sizeof(char), length, file);
-		buffer[length] = '\0';
+	return file;
+}
+
+void cymrite_closeFile(FILE* const file) {
+	if (fclose(file)) {
+		fprintf(stderr, "Failed to close file: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
-	fclose(file);
+}
+
+char* cymrite_readFile(const char* const path) {
+	FILE* const file = cymrite_openFile(path, "r");
+	size_t chunkSize = 1024; // Arbitrary
+	Buffer result = {
+		.size = 0,
+		.data = malloc(chunkSize)
+	};
+	while (true) {
+		if (!result.data) { // Catches both malloc() and realloc() failures
+			fprintf(stderr, "Failed to allocate memory while reading file: %s\n", path);
+			exit(EXIT_FAILURE);
+		}
+		const size_t bytesRead = fread(result.data + result.size, 1, chunkSize, file);
+		if ((SIZE_MAX - result.size - 1) < bytesRead) { // Additional index for null-terminator
+			fprintf(stderr, "Failed to read entire file: %s\n", path);
+			exit(EXIT_FAILURE);
+		}
+		result.size += bytesRead;
+		if (bytesRead == chunkSize) {
+			chunkSize *= 2;
+			result.data = realloc(result.data, result.size + chunkSize);
+		} else {
+			result.data[result.size++] = '\0';
+			break;
+		}
+	}
+	cymrite_closeFile(file);
 	return buffer;
 }
 
-void cymrite_writeFile(const char* const filePath, const char* const data) {
-	FILE* const file = fopen(filePath, strcmp(strrchr(filePath, '.'), ".txt") ? "wb" : "w");
-	if (!file) {
-		fprintf(stderr, "Could not open file: %s\n", filePath);
-		return;
-	}
+void cymrite_writeFile(const char* const path, const char* const data) {
+	FILE* const file = cymrite_openFile(path, "w");
 	if (strlen(data)) {
 		fputs(data, file);
 	}
-	fclose(file);
+	cymrite_closeFile(file);
 }
 
-void cymrite_copyFile(const char* const sourceFilePath, const char* const destinationFilePath) {
-	FILE* const file1 = fopen(sourceFilePath, strcmp(strrchr(sourceFilePath, '.'), ".txt") ? "rb" : "r");
-	if (!file1) {
-		fprintf(stderr, "Could not open file: %s\n", sourceFilePath);
-		return;
-	}
-	FILE* const file2 = fopen(destinationFilePath, strcmp(strrchr(destinationFilePath, '.'), ".txt") ? "wb" : "w");
-	if (!file2) {
-		fprintf(stderr, "Could not open file: %s\n", destinationFilePath);
-		return;
-	}
-	fseek(file1, 0, SEEK_END);
-	const size_t length = ftell(file1);
-	fseek(file1, 0, SEEK_SET);
-	char* const buffer = malloc(length + 1);
-	if (buffer) {
-		fread(buffer, 1, length, file1);
-		buffer[length] = '\0';
-	}
-	fclose(file1);
-	fputs(buffer, file2);
-	fclose(file2);
+void cymrite_copyFile(const char* const sourcePath, const char* const destinationPath) {
+	char* data = cymrite_readFile(sourcePath);
+	cymrite_writeFile(destinationPath, data);
+	free(data);
 }
 
-char* cymrite_getFileExtension(const char* const filePath) {
-	return strrchr(filePath, '.') + 1;
+char* cymrite_getFileExtension(const char* const path) {
+	return strrchr(path, '.') + 1;
 }
 
-void cymrite_deleteFile(const char* const filePath) {
-	if (remove(filePath)) {
-		fprintf(stderr, "Could not delete file: %s\n", filePath);
+void cymrite_deleteFile(const char* const path) {
+	if (remove(path)) {
+		fprintf(stderr, "Failed to delete file: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
 }
 
-void cymrite_createDirectory(const char* const directoryPath) {
+void cymrite_createDirectory(const char* const path) {
 	struct stat st = { 0 };
-	if (stat(directoryPath, &st) != -1) {
-		fprintf(stderr, "Creating directory with this name will result in an overwrite\n");
+	if (stat(path, &st) != -1) {
+		fprintf(stderr, "Failed to create directory: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
-	mkdir(directoryPath, 0700);
+	mkdir(path, 0700);
 }
 
-void cymrite_removeDirectory(const char* const directoryPath) {
+void cymrite_removeDirectory(const char* const path) {
 	struct stat st = { 0 };
-	if (stat(directoryPath, &st) == -1) {
-		fprintf(stderr, "Could not delete directory: %s\n", directoryPath);
-		return;
+	if (stat(path, &st) == -1) {
+		fprintf(stderr, "Failed to delete directory: %s\n", path);
+		exit(EXIT_FAILURE);
 	}
-	rmdir(directoryPath);
+	rmdir(path);
 }
