@@ -1,8 +1,8 @@
 #ifndef CYMRITE_HEADER_GEOMETRY
-#	define CYMRITE_HEADER_GEOMETRY
+	#define CYMRITE_HEADER_GEOMETRY
 
-#	include <stdbool.h>
-#	include "./math.h"
+	#include <stdbool.h>
+	#include "./math.h"
 
 typedef cymrite_Vector2 cymrite_Point;
 

@@ -1,7 +1,7 @@
 #ifndef CYMRITE_HEADER_TIME
-#	define CYMRITE_HEADER_TIME
+	#define CYMRITE_HEADER_TIME
 
-#	include <stdbool.h>
+	#include <stdbool.h>
 
 int cymrite_getYear();
 

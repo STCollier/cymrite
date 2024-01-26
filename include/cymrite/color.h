@@ -1,7 +1,7 @@
 #ifndef CYMRITE_HEADER_COLOR
-#	define CYMRITE_HEADER_COLOR
+	#define CYMRITE_HEADER_COLOR
 
-#	include <stdint.h>
+	#include <stdint.h>
 
 typedef struct {
 	uint8_t red;

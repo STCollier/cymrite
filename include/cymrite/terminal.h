@@ -1,10 +1,10 @@
 #ifndef CYMRITE_HEADER_TERMINAL
-#	define CYMRITE_HEADER_TERMINAL
+	#define CYMRITE_HEADER_TERMINAL
 
-#	include <stdbool.h>
-#	include <stddef.h>
-#	include <stdio.h>
-#	include "./color.h"
+	#include <stdbool.h>
+	#include <stddef.h>
+	#include <stdio.h>
+	#include "./color.h"
 
 typedef struct {
 	int row;

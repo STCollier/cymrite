@@ -1,7 +1,7 @@
 #ifndef CYMRITE_HEADER_FILESYSTEM
-#	define CYMRITE_HEADER_FILESYSTEM
+	#define CYMRITE_HEADER_FILESYSTEM
 
-#	include <stddef.h>
+	#include <stddef.h>
 
 typedef struct {
 	size_t size;

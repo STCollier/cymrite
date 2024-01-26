@@ -1,9 +1,9 @@
 #ifndef CYMRITE_HEADER_STRING
-#	define CYMRITE_HEADER_STRING 
+	#define CYMRITE_HEADER_STRING
 
-#	include <stddef.h>
+	#include <stddef.h>
 
-#	define CYMRITE_WHITESPACE "\x9\xA\xB\xC\xD\x20\x85\xA0"
+	#define CYMRITE_WHITESPACE "\x09\x0A\x0B\x0C\x0D\x20\x85\xA0"
 
 int cymrite_countStringTokens(const char* string);
 

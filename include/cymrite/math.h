@@ -1,13 +1,13 @@
 #ifndef CYMRITE_HEADER_MATH
-#	define CYMRITE_HEADER_MATH
+	#define CYMRITE_HEADER_MATH
 
-#	include <math.h>
-#	include <stdbool.h>
+	#include <math.h>
+	#include <stdbool.h>
 
-#	define CYMRITE_PI acos(-1)
-#	define CYMRITE_TAU (CYMRITE_PI * 2)
-#	define CYMRITE_MIN(a, b) (((a) < (b)) ? (a) : (b))
-#	define CYMRITE_MAX(a, b) (((a) > (b)) ? (a) : (b))
+	#define CYMRITE_PI acos(-1)
+	#define CYMRITE_TAU (CYMRITE_PI * 2)
+	#define CYMRITE_MIN(a, b) (((a) < (b)) ? (a) : (b))
+	#define CYMRITE_MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 typedef struct {
 	double x;

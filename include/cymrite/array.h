@@ -1,7 +1,7 @@
 #ifndef CYMRITE_HEADER_ARRAY
-#	define CYMRITE_HEADER_ARRAY
+	#define CYMRITE_HEADER_ARRAY
 
-#	include <stddef.h>
+	#include <stddef.h>
 
 typedef struct {
 	size_t* data;

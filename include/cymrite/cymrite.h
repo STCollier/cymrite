@@ -1,4 +1,3 @@
-#pragma once
 #ifndef CYMRITE_H
 	#define CYMRITE_H
 

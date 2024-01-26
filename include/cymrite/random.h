@@ -1,5 +1,5 @@
 #ifndef CYMRITE_HEADER_RANDOM
-#	define CYMRITE_HEADER_RANDOM
+	#define CYMRITE_HEADER_RANDOM
 
 void cymrite_setSeed(int seed);
 
