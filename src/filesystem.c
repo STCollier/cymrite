@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -23,10 +24,10 @@ void cymrite_closeFile(FILE* const file) {
 	}
 }
 
-char* cymrite_readFile(const char* const path) {
+cymrite_Buffer cymrite_readFile(const char* const path) {
 	FILE* const file = cymrite_openFile(path, "r");
 	size_t chunkSize = 1024; // Arbitrary
-	Buffer result = {
+	cymrite_Buffer result = {
 		.size = 0,
 		.data = malloc(chunkSize)
 	};
@@ -50,7 +51,7 @@ char* cymrite_readFile(const char* const path) {
 		}
 	}
 	cymrite_closeFile(file);
-	return buffer;
+	return result;
 }
 
 void cymrite_writeFile(const char* const path, const char* const data) {
@@ -67,8 +68,12 @@ void cymrite_copyFile(const char* const sourcePath, const char* const destinatio
 	free(data);
 }
 
-char* cymrite_getFileExtension(const char* const path) {
-	return strrchr(path, '.') + 1;
+cymrite_Buffer cymrite_getFileExtension(const char* const path) {
+	char* data = strrchr(path, '.');
+	return cymrite_Buffer {
+		.size = strlen(path) - data + path, // Not sure if correct
+		.data = data + 1
+	};
 }
 
 void cymrite_deleteFile(const char* const path) {

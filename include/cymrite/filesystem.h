@@ -12,13 +12,13 @@ FILE* cymrite_openFile(const char* path, const char* mode);
 
 void cymrite_closeFile(FILE* file);
 
-char* cymrite_readFile(const char* path);
+cymrite_Buffer cymrite_readFile(const char* path);
 
 void cymrite_writeFile(const char* path, const char* data);
 
 void cymrite_copyFile(const char* sourcePath, const char* destinationPath);
 
-char* cymrite_getFileExtension(const char* path);
+cymrite_Buffer cymrite_getFileExtension(const char* path);
 
 void cymrite_deleteFile(const char* path);
 
